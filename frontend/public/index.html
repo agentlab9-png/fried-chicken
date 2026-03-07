@@ -3,8 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/icon-192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="theme-color" content="#dc2626" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="فرايد تشكين" />
     <meta name="description" content="فرايد تشكين - أشهى الدجاج المقلي في العراق. اطلب الآن توصيل أو استلام من أقرب فرع. Fried Chicken - The Best Fried Chicken in Iraq." />
     <meta name="keywords" content="فرايد تشكين, دجاج مقلي, مطعم, عراق, توصيل, fried chicken, iraq, delivery" />
     <meta name="author" content="Fried Chicken Iraq" />
@@ -50,5 +55,12 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>

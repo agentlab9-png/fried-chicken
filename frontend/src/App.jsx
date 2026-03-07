@@ -64,6 +64,7 @@ const translations = {
     loadError: 'فشل تحميل البيانات. يرجى المحاولة مرة أخرى.',
     retry: 'إعادة المحاولة', menuNav: 'قائمة التنقل',
     prev: 'السابق', next: 'التالي', page: 'صفحة',
+    installApp: 'تنصيب التطبيق', installPrompt: 'نصّب فرايد تشكين على شاشتك الرئيسية!', install: 'تنصيب', dismiss: 'لاحقاً',
   },
   en: {
     appName: 'Fried Chicken', home: 'Home', menu: 'Menu', order: 'Order Now',
@@ -94,6 +95,7 @@ const translations = {
     loadError: 'Failed to load data. Please try again.',
     retry: 'Retry', menuNav: 'Navigation menu',
     prev: 'Previous', next: 'Next', page: 'Page',
+    installApp: 'Install App', installPrompt: 'Install Fried Chicken on your home screen!', install: 'Install', dismiss: 'Later',
   },
   ku: {
     appName: 'فرایەد چیكن', home: 'سەرەكی', menu: 'مێنیو', order: 'داواكاری',
@@ -127,6 +129,7 @@ const translations = {
     loadError: 'داتاكان بارنەبوون. تكایە دووبارە هەوڵبدەرەوە.',
     retry: 'دووبارە', menuNav: 'مێنیوی ڕێنیشاندەر',
     prev: 'پێشوو', next: 'دواتر', page: 'لاپەڕە',
+    installApp: 'دابەزاندنی ئەپ', installPrompt: 'فرایەد چیکن دابەزێنە بۆ شاشەی سەرەكی!', install: 'دابەزاندن', dismiss: 'دواتر',
   }
 };
 
@@ -850,6 +853,8 @@ function AppContent() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [toast, setToast] = useState('');
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
 
   const t = translations[lang] || translations.ar;
   const cartCount = cart.reduce((a, i) => a + i.quantity, 0);
@@ -868,6 +873,28 @@ function AppContent() {
 
   // Scroll to top on page change
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [page]);
+
+  // PWA Install Prompt
+  useEffect(() => {
+    const dismissed = localStorage.getItem('fc_install_dismissed');
+    if (dismissed && Date.now() - parseInt(dismissed) < 7 * 24 * 60 * 60 * 1000) return;
+
+    const handler = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+      setShowInstallBanner(true);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+
+    // iOS detection - show custom banner since iOS doesn't fire beforeinstallprompt
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (isIOS && !isStandalone) {
+      setShowInstallBanner(true);
+    }
+
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
 
   // Load initial data
   useEffect(() => {
@@ -918,6 +945,22 @@ function AppContent() {
     setPage('track');
   };
 
+  const handleInstall = async () => {
+    if (installPrompt) {
+      installPrompt.prompt();
+      const result = await installPrompt.userChoice;
+      if (result.outcome === 'accepted') {
+        setShowInstallBanner(false);
+        setInstallPrompt(null);
+      }
+    }
+  };
+
+  const dismissInstall = () => {
+    setShowInstallBanner(false);
+    localStorage.setItem('fc_install_dismissed', Date.now().toString());
+  };
+
   if (loading) return (
     <div className="loading-screen" role="status" aria-label={t.loading}>
       <div style={{ textAlign: 'center' }}>
@@ -942,6 +985,22 @@ function AppContent() {
         Skip to content
       </a>
       <Navbar lang={lang} setLang={setLang} page={page} setPage={setPage} cartCount={cartCount} user={user} onLogout={handleLogout} t={t} />
+
+      {showInstallBanner && (
+        <div className="install-banner" role="alert">
+          <div className="install-banner-content">
+            <div className="install-banner-icon" aria-hidden="true">🍗</div>
+            <div className="install-banner-text">
+              <strong>{t.installApp}</strong>
+              <p>{installPrompt ? t.installPrompt : (lang === 'en' ? 'Tap the share button then "Add to Home Screen"' : lang === 'ku' ? 'دوگمەی هاوبەشکردن دابگرە پاشان "زیادکردن بۆ شاشەی سەرەکی"' : 'اضغط زر المشاركة ثم "أضف للشاشة الرئيسية"')}</p>
+            </div>
+            <div className="install-banner-actions">
+              {installPrompt && <button className="btn btn-primary" onClick={handleInstall}>{t.install}</button>}
+              <button className="btn btn-secondary btn-sm" onClick={dismissInstall}>{t.dismiss}</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div id="main-content" style={{ flex: 1 }}>
         {page === 'home' && <HomePage t={t} lang={lang} setPage={setPage} menuItems={menuItems} />}

@@ -940,6 +940,84 @@ img { max-width: 100%; height: auto; }
 .admin-card .price { color: var(--primary); font-weight: bold; }
 .admin-card .meta { font-size: 0.8rem; color: var(--text-muted); }
 
+/* ─── PWA Install Banner ─────────────────────────────────────────────────── */
+.install-banner {
+  background: linear-gradient(135deg, #991b1b, #dc2626);
+  color: white;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 150;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.install-banner-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.install-banner-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+
+.install-banner-text {
+  flex: 1;
+}
+
+.install-banner-text strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.install-banner-text p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.install-banner-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.install-banner-actions .btn-primary {
+  background: white;
+  color: var(--primary);
+  font-weight: bold;
+  padding: 0.6rem 1.5rem;
+  border-radius: var(--radius-full);
+  animation: pulse 2s infinite 1s;
+}
+
+.install-banner-actions .btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+.install-banner-actions .btn-secondary {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.install-banner-actions .btn-secondary:hover {
+  background: rgba(255,255,255,0.3);
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════ */
 /* ─── RESPONSIVE ──────────────────────────────────────────────────────────── */
 /* ═══════════════════════════════════════════════════════════════════════════ */
@@ -976,6 +1054,11 @@ img { max-width: 100%; height: auto; }
 
 /* Mobile (480px and below) */
 @media (max-width: 480px) {
+  .install-banner-content { flex-wrap: wrap; padding: 0.8rem 1rem; gap: 0.75rem; }
+  .install-banner-icon { font-size: 2rem; }
+  .install-banner-text strong { font-size: 1rem; }
+  .install-banner-text p { font-size: 0.8rem; }
+  .install-banner-actions { width: 100%; justify-content: center; }
   html { font-size: 15px; }
 
   .navbar { padding: 0.5rem 0.75rem; }
