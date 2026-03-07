@@ -6,7 +6,7 @@ const { protect, authorize } = require('../middleware/auth');
 // GET /api/stats/dashboard - Dashboard stats (admin/manager)
 router.get('/dashboard', protect, authorize('admin', 'manager'), async (req, res) => {
   try {
-    const { branch, date } = req.query;
+    const { branch } = req.query;
     const filter = {};
     if (branch) filter.branch = branch;
     const today = new Date();
@@ -40,7 +40,7 @@ router.get('/dashboard', protect, authorize('admin', 'manager'), async (req, res
       }
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Failed to fetch dashboard stats' });
   }
 });
 
@@ -54,7 +54,7 @@ router.get('/orders-by-status', protect, async (req, res) => {
     ]);
     res.json({ success: true, stats });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Failed to fetch order stats' });
   }
 });
 

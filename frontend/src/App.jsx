@@ -1,27 +1,37 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Component } from 'react';
+import './styles.css';
 
-// API Configuration
+// ─── API Configuration ───────────────────────────────────────────────────────
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const api = {
-  get: (url, token) => fetch(API_BASE + url, { headers: token ? { Authorization: 'Bearer ' + token } : {} }).then(r => r.json()),
+  get: (url, token) => fetch(API_BASE + url, {
+    headers: token ? { Authorization: 'Bearer ' + token } : {},
+    credentials: 'include',
+  }).then(r => {
+    if (!r.ok) throw new Error('Request failed');
+    return r.json();
+  }),
   post: (url, data, token) => fetch(API_BASE + url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
-    body: JSON.stringify(data)
+    credentials: 'include',
+    body: JSON.stringify(data),
   }).then(r => r.json()),
   put: (url, data, token) => fetch(API_BASE + url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-    body: JSON.stringify(data)
+    credentials: 'include',
+    body: JSON.stringify(data),
   }).then(r => r.json()),
   delete: (url, token) => fetch(API_BASE + url, {
     method: 'DELETE',
-    headers: { Authorization: 'Bearer ' + token }
+    headers: { Authorization: 'Bearer ' + token },
+    credentials: 'include',
   }).then(r => r.json()),
 };
 
-// Translations
+// ─── Translations ────────────────────────────────────────────────────────────
 const translations = {
   ar: {
     appName: 'فرايد تشكين', home: 'الرئيسية', menu: 'القائمة', order: 'اطلب الآن',
@@ -37,14 +47,23 @@ const translations = {
     family: 'عائلي', sides: 'إضافات', popular: 'الأكثر طلباً',
     new: 'جديد', spicy: 'حار', username: 'اسم المستخدم', password: 'كلمة المرور',
     dashboard: 'لوحة التحكم', todayOrders: 'طلبات اليوم', totalRevenue: 'إجمالي الإيرادات',
-    lang: 'اللغة', search: 'بحث', close: 'إغلاق', open: 'مفتوح',
+    lang: 'اللغة', search: 'بحث...', close: 'إغلاق', open: 'مفتوح',
     closed: 'مغلق', workingHours: 'ساعات العمل', branch: 'الفرع', selectBranch: 'اختر الفرع',
     quantity: 'الكمية', price: 'السعر', remove: 'حذف', empty: 'السلة فارغة',
-    orderSent: 'تم إرسال طلبك', trackOrder: 'تتبع الطلب', enterOrderNumber: 'أدخل رقم الطلب',
-    noResults: 'لا توجد نتائج', loading: 'جاري التحميل...', error: 'حدث خطأ',
-    save: 'حفظ', cancel: 'إلغاء', edit: 'تعديل', delete: 'حذف', add: 'إضافة',
+    orderSent: 'تم إرسال طلبك بنجاح!', trackOrder: 'تتبع الطلب',
+    enterOrderNumber: 'أدخل رقم الطلب', noResults: 'لا توجد نتائج',
+    loading: 'جاري التحميل...', error: 'حدث خطأ', save: 'حفظ',
+    cancel: 'إلغاء', edit: 'تعديل', delete: 'حذف', add: 'إضافة',
     welcome: 'أهلاً بكم في فرايد تشكين', tagline: 'أشهى الدجاج المقلي في العراق',
-    iqd: 'د.ع',
+    iqd: 'د.ع', all: 'الكل', fillRequired: 'يرجى ملء جميع الحقول المطلوبة',
+    invalidPhone: 'رقم الهاتف غير صحيح', confirmOrder: 'تأكيد الطلب',
+    orderReview: 'مراجعة الطلب', yes: 'نعم', no: 'لا',
+    confirmStatusChange: 'هل تريد تغيير حالة الطلب؟', addedToCart: 'تمت الإضافة للسلة',
+    pendingOrders: 'طلبات قيد الانتظار', totalOrdersLabel: 'إجمالي الطلبات',
+    noOrders: 'لا توجد طلبات', action: 'الإجراء', users: 'المستخدمين',
+    loadError: 'فشل تحميل البيانات. يرجى المحاولة مرة أخرى.',
+    retry: 'إعادة المحاولة', menuNav: 'قائمة التنقل',
+    prev: 'السابق', next: 'التالي', page: 'صفحة',
   },
   en: {
     appName: 'Fried Chicken', home: 'Home', menu: 'Menu', order: 'Order Now',
@@ -58,14 +77,23 @@ const translations = {
     crispy: 'Crispy', family: 'Family', sides: 'Sides', popular: 'Popular',
     new: 'New', spicy: 'Spicy', username: 'Username', password: 'Password',
     dashboard: 'Dashboard', todayOrders: "Today's Orders", totalRevenue: 'Total Revenue',
-    lang: 'Language', search: 'Search', close: 'Close', open: 'Open', closed: 'Closed',
+    lang: 'Language', search: 'Search...', close: 'Close', open: 'Open', closed: 'Closed',
     workingHours: 'Working Hours', branch: 'Branch', selectBranch: 'Select Branch',
     quantity: 'Qty', price: 'Price', remove: 'Remove', empty: 'Cart is empty',
-    orderSent: 'Order placed!', trackOrder: 'Track Order', enterOrderNumber: 'Enter order number',
-    noResults: 'No results', loading: 'Loading...', error: 'An error occurred',
-    save: 'Save', cancel: 'Cancel', edit: 'Edit', delete: 'Delete', add: 'Add',
+    orderSent: 'Order placed successfully!', trackOrder: 'Track Order',
+    enterOrderNumber: 'Enter order number', noResults: 'No results',
+    loading: 'Loading...', error: 'An error occurred', save: 'Save',
+    cancel: 'Cancel', edit: 'Edit', delete: 'Delete', add: 'Add',
     welcome: 'Welcome to Fried Chicken', tagline: 'The Best Fried Chicken in Iraq',
-    iqd: 'IQD',
+    iqd: 'IQD', all: 'All', fillRequired: 'Please fill all required fields',
+    invalidPhone: 'Invalid phone number', confirmOrder: 'Confirm Order',
+    orderReview: 'Order Review', yes: 'Yes', no: 'No',
+    confirmStatusChange: 'Change order status?', addedToCart: 'Added to cart',
+    pendingOrders: 'Pending Orders', totalOrdersLabel: 'Total Orders',
+    noOrders: 'No orders', action: 'Action', users: 'Users',
+    loadError: 'Failed to load data. Please try again.',
+    retry: 'Retry', menuNav: 'Navigation menu',
+    prev: 'Previous', next: 'Next', page: 'Page',
   },
   ku: {
     appName: 'فرایەد چیكن', home: 'سەرەكی', menu: 'مێنیو', order: 'داواكاری',
@@ -81,7 +109,7 @@ const translations = {
     family: 'خێزانی', sides: 'زیادەكان', popular: 'باوترین', new: 'نوێ', spicy: 'تووند',
     username: 'ناوی بەكارهێنەر', password: 'ووشەی نهێنی',
     dashboard: 'داشبۆرد', todayOrders: 'داواكارییەكانی ئەمڕۆ',
-    totalRevenue: 'کۆی داهات', lang: 'زمان', search: 'گەڕان',
+    totalRevenue: 'کۆی داهات', lang: 'زمان', search: 'گەڕان...',
     close: 'داخستن', open: 'كراوەیە', closed: 'داخراوە',
     workingHours: 'كاتی كار', branch: 'لق', selectBranch: 'لق هەڵبژێرە',
     quantity: 'بڕ', price: 'نرخ', remove: 'سڕینەوە', empty: 'سەبەت بەتاڵە',
@@ -90,342 +118,563 @@ const translations = {
     loading: 'بارکردن...', error: 'هەڵەیەك روویدا',
     save: 'پاشەکەوتكردن', cancel: 'هەڵوەشاندنەوە', edit: 'دەستکاری', delete: 'سڕینەوە', add: 'زیادكردن',
     welcome: 'بەخێربێن بۆ فرایەد چیكن', tagline: 'باشترین مریشكی قەیمەكراو لە عێراق',
-    iqd: 'د.ع',
+    iqd: 'د.ع', all: 'هەموو', fillRequired: 'تكایە هەموو خانەكان پڕ بكەرەوە',
+    invalidPhone: 'ژمارەی تەلەفۆن هەڵەیە', confirmOrder: 'دڵنیاكردنەوە',
+    orderReview: 'پێداچوونەوەی داواكاری', yes: 'بەڵێ', no: 'نەخێر',
+    confirmStatusChange: 'دۆخی داواكاری بگۆڕیت؟', addedToCart: 'زیادکرا بۆ سەبەت',
+    pendingOrders: 'داواكارییە چاوەڕوانەكان', totalOrdersLabel: 'کۆی داواكارییەكان',
+    noOrders: 'داواكاری نییە', action: 'كردار', users: 'بەكارهێنەران',
+    loadError: 'داتاكان بارنەبوون. تكایە دووبارە هەوڵبدەرەوە.',
+    retry: 'دووبارە', menuNav: 'مێنیوی ڕێنیشاندەر',
+    prev: 'پێشوو', next: 'دواتر', page: 'لاپەڕە',
   }
 };
 
-// Status Colors
-const statusColors = {
-  pending: '#f59e0b', confirmed: '#3b82f6', preparing: '#8b5cf6',
-  ready: '#10b981', delivering: '#06b6d4', delivered: '#22c55e', cancelled: '#ef4444'
+const VALID_STATUSES = ['pending', 'confirmed', 'preparing', 'ready', 'delivering', 'delivered', 'cancelled'];
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+const sanitize = (str) => {
+  if (typeof str !== 'string') return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 };
 
-// ─── Components ───────────────────────────────────────────────────────────────
+const validatePhone = (phone) => /^[\d\s+()-]{7,15}$/.test(phone.trim());
 
-// Navbar
-const Navbar = ({ lang, setLang, page, setPage, cart, user, onLogout }) => {
-  const t = translations[lang];
-  const [menuOpen, setMenuOpen] = useState(false);
-  
-  return (
-    <nav style={{ background: '#dc2626', padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }} onClick={() => setPage('home')}>
-        <span style={{ fontSize: '1.8rem' }}>🍗</span>
-        <span style={{ color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>{t.appName}</span>
-      </div>
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        {['home','menu','branches','track'].map(p => (
-          <button key={p} onClick={() => setPage(p)} style={{ background: page === p ? 'rgba(255,255,255,0.3)' : 'transparent', border: 'none', color: 'white', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer', fontWeight: page === p ? 'bold' : 'normal' }}>
-            {t[p]}
+const getCartFromStorage = () => {
+  try {
+    const saved = localStorage.getItem('fc_cart');
+    return saved ? JSON.parse(saved) : [];
+  } catch { return []; }
+};
+
+const saveCartToStorage = (cart) => {
+  try { localStorage.setItem('fc_cart', JSON.stringify(cart)); } catch {}
+};
+
+// ─── Error Boundary ──────────────────────────────────────────────────────────
+class ErrorBoundary extends Component {
+  state = { hasError: false };
+  static getDerivedStateFromError() { return { hasError: true }; }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="error-boundary" role="alert">
+          <div className="icon" aria-hidden="true">⚠️</div>
+          <h2>حدث خطأ غير متوقع</h2>
+          <p>يرجى تحديث الصفحة والمحاولة مرة أخرى</p>
+          <button className="btn btn-primary btn-lg" onClick={() => window.location.reload()}>
+            تحديث الصفحة
           </button>
-        ))}
-        <button onClick={() => setPage('cart')} style={{ background: 'white', color: '#dc2626', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', position: 'relative' }}>
-          🛒 {cart.length > 0 && <span style={{ background: '#dc2626', color: 'white', borderRadius: '50%', padding: '0 5px', fontSize: '0.75rem', position: 'absolute', top: -8, right: -8 }}>{cart.reduce((a, i) => a + i.quantity, 0)}</span>}
-        </button>
-        {user ? (
-          <>
-            <button onClick={() => setPage('admin')} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer' }}>{t.admin}</button>
-            <button onClick={onLogout} style={{ background: 'transparent', border: '1px solid white', color: 'white', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer' }}>{t.logout}</button>
-          </>
-        ) : (
-          <button onClick={() => setPage('login')} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer' }}>{t.login}</button>
-        )}
-        <select value={lang} onChange={e => setLang(e.target.value)} style={{ padding: '0.3rem', borderRadius: '4px', border: 'none' }}>
-          <option value="ar">عر</option>
-          <option value="en">En</option>
-          <option value="ku">کو</option>
-        </select>
-      </div>
-    </nav>
-  );
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// ─── Toast Component ─────────────────────────────────────────────────────────
+const Toast = ({ message, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 2500);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  if (!message) return null;
+  return <div className="toast" role="status" aria-live="polite">{message}</div>;
 };
 
-// HomePage
-const HomePage = ({ t, setPage, menuItems, branches }) => (
-  <div>
-    <div style={{ background: 'linear-gradient(135deg, #dc2626, #991b1b)', color: 'white', padding: '4rem 2rem', textAlign: 'center' }}>
-      <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🍗</div>
-      <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>{t.welcome}</h1>
-      <p style={{ fontSize: '1.2rem', marginBottom: '2rem', opacity: 0.9 }}>{t.tagline}</p>
-      <button onClick={() => setPage('menu')} style={{ background: 'white', color: '#dc2626', padding: '0.8rem 2rem', border: 'none', borderRadius: '30px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}>
-        {t.order} 🍗
-      </button>
-    </div>
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#dc2626' }}>⭐ {t.popular}</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem' }}>
-        {menuItems.filter(i => i.badge === 'popular').slice(0, 4).map(item => (
-          <div key={item._id} style={{ border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-            <div style={{ background: '#fef2f2', padding: '2rem', textAlign: 'center', fontSize: '3rem' }}>{item.icon || '🍗'}</div>
-            <div style={{ padding: '1rem' }}>
-              <h3 style={{ fontWeight: 'bold' }}>{item.name?.ar || item.name?.en}</h3>
-              <p style={{ color: '#dc2626', fontWeight: 'bold' }}>{item.price?.toLocaleString()} د.ع</p>
-            </div>
-          </div>
-        ))}
+// ─── Confirmation Modal ──────────────────────────────────────────────────────
+const ConfirmModal = ({ title, children, onConfirm, onCancel, confirmText, cancelText, loading }) => (
+  <div className="modal-overlay" onClick={onCancel} role="dialog" aria-modal="true" aria-label={title}>
+    <div className="modal" onClick={e => e.stopPropagation()}>
+      <h3>{title}</h3>
+      {children}
+      <div className="modal-actions">
+        <button className="btn btn-secondary" onClick={onCancel} disabled={loading}>{cancelText}</button>
+        <button className="btn btn-primary" onClick={onConfirm} disabled={loading}>
+          {loading ? <span className="spinner" /> : confirmText}
+        </button>
       </div>
     </div>
   </div>
 );
 
-// MenuPage  
-const MenuPage = ({ t, lang, menuItems, addToCart }) => {
-  const [category, setCategory] = useState('all');
-  const [search, setSearch] = useState('');
-  
-  const filtered = menuItems.filter(item => {
-    const matchCat = category === 'all' || item.category === category;
-    const matchSearch = !search || 
-      (item.name?.ar || '').includes(search) || 
-      (item.name?.en || '').toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch && item.isAvailable;
-  });
-  
-  const categories = ['all', 'crispy', 'family', 'sides'];
-  
+// ─── Navbar ──────────────────────────────────────────────────────────────────
+const Navbar = ({ lang, setLang, page, setPage, cartCount, user, onLogout, t }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const navItems = ['home', 'menu', 'branches', 'track'];
+
+  const handleNav = (p) => {
+    setPage(p);
+    setMenuOpen(false);
+  };
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   return (
-    <div style={{ padding: '1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#dc2626', fontSize: '1.8rem' }}>🍗 {t.menu}</h2>
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {categories.map(cat => (
-          <button key={cat} onClick={() => setCategory(cat)} style={{ padding: '0.4rem 1rem', borderRadius: '20px', border: '2px solid #dc2626', background: category === cat ? '#dc2626' : 'white', color: category === cat ? 'white' : '#dc2626', cursor: 'pointer', fontWeight: 'bold' }}>
-            {cat === 'all' ? '🍽 الكل' : (t[cat] || cat)}
+    <nav className="navbar" role="navigation" aria-label={t.menuNav}>
+      <button className="navbar-brand" onClick={() => handleNav('home')} aria-label={t.appName + ' - ' + t.home}>
+        <span className="icon" aria-hidden="true">🍗</span>
+        <span className="name">{t.appName}</span>
+      </button>
+
+      {/* Desktop Navigation */}
+      <div className="navbar-desktop">
+        {navItems.map(p => (
+          <button key={p} className={`nav-link ${page === p ? 'active' : ''}`} onClick={() => setPage(p)} aria-current={page === p ? 'page' : undefined}>
+            {t[p]}
           </button>
         ))}
+        <button className="cart-btn" onClick={() => setPage('cart')} aria-label={`${t.cart} (${cartCount})`}>
+          🛒 {t.cart}
+          {cartCount > 0 && <span className="cart-badge" aria-hidden="true">{cartCount}</span>}
+        </button>
+        {user ? (
+          <>
+            <button className="nav-link" onClick={() => setPage('admin')} aria-current={page === 'admin' ? 'page' : undefined}>{t.admin}</button>
+            <button className="nav-link" onClick={onLogout} style={{ border: '1px solid rgba(255,255,255,0.5)' }}>{t.logout}</button>
+          </>
+        ) : (
+          <button className="nav-link" onClick={() => setPage('login')}>{t.login}</button>
+        )}
+        <select className="lang-select" value={lang} onChange={e => setLang(e.target.value)} aria-label={t.lang}>
+          <option value="ar">عربي</option>
+          <option value="en">En</option>
+          <option value="ku">کوردی</option>
+        </select>
       </div>
-      <input placeholder={t.search} value={search} onChange={e => setSearch(e.target.value)}
-        style={{ width: '100%', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid #e5e7eb', marginBottom: '1.5rem', fontSize: '1rem', maxWidth: '400px', display: 'block', margin: '0 auto 1.5rem' }} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
-        {filtered.map(item => (
-          <div key={item._id} style={{ border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', transition: 'transform 0.2s' }}>
-            {item.badge && <div style={{ background: item.badge === 'popular' ? '#f59e0b' : item.badge === 'spicy' ? '#ef4444' : '#10b981', color: 'white', padding: '0.2rem 0.6rem', fontSize: '0.75rem', fontWeight: 'bold', display: 'inline-block' }}>{t[item.badge] || item.badge}</div>}
-            <div style={{ background: '#fef2f2', padding: '2rem', textAlign: 'center', fontSize: '3.5rem' }}>{item.icon || '🍗'}</div>
-            <div style={{ padding: '1rem' }}>
-              <h3 style={{ fontWeight: 'bold', marginBottom: '0.3rem' }}>{item.name?.[lang] || item.name?.ar}</h3>
-              <p style={{ color: '#6b7280', fontSize: '0.85rem', marginBottom: '0.5rem' }}>{item.description?.[lang] || item.description?.ar}</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '1.1rem' }}>{item.price?.toLocaleString()} {t.iqd}</span>
-                <button onClick={() => addToCart(item)} style={{ background: '#dc2626', color: 'white', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>+ {t.addToCart}</button>
-              </div>
-            </div>
+
+      {/* Hamburger */}
+      <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label={t.menuNav} aria-expanded={menuOpen}>
+        ☰
+      </button>
+
+      {/* Mobile Menu */}
+      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)}>
+        <div className="mobile-menu-content" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={t.menuNav}>
+          <div className="mobile-menu-header">
+            <h3>🍗 {t.appName}</h3>
+            <button className="mobile-close" onClick={() => setMenuOpen(false)} aria-label={t.close}>✕</button>
           </div>
-        ))}
+          {navItems.map(p => (
+            <button key={p} className={`mobile-nav-link ${page === p ? 'active' : ''}`} onClick={() => handleNav(p)} aria-current={page === p ? 'page' : undefined}>
+              {p === 'home' ? '🏠' : p === 'menu' ? '🍗' : p === 'branches' ? '📍' : '📦'} {t[p]}
+            </button>
+          ))}
+          <button className={`mobile-nav-link ${page === 'cart' ? 'active' : ''}`} onClick={() => handleNav('cart')}>
+            🛒 {t.cart} {cartCount > 0 && `(${cartCount})`}
+          </button>
+          {user ? (
+            <>
+              <button className={`mobile-nav-link ${page === 'admin' ? 'active' : ''}`} onClick={() => handleNav('admin')}>⚙️ {t.admin}</button>
+              <button className="mobile-nav-link" onClick={() => { onLogout(); setMenuOpen(false); }}>🚪 {t.logout}</button>
+            </>
+          ) : (
+            <button className={`mobile-nav-link ${page === 'login' ? 'active' : ''}`} onClick={() => handleNav('login')}>🔐 {t.login}</button>
+          )}
+          <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
+            <label htmlFor="mobile-lang" style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>{t.lang}</label>
+            <select id="mobile-lang" className="form-select" value={lang} onChange={e => setLang(e.target.value)}>
+              <option value="ar">عربي</option>
+              <option value="en">English</option>
+              <option value="ku">کوردی</option>
+            </select>
+          </div>
+        </div>
       </div>
-      {filtered.length === 0 && <p style={{ textAlign: 'center', color: '#6b7280', marginTop: '2rem' }}>{t.noResults}</p>}
-    </div>
+    </nav>
   );
 };
 
-// CartPage
+// ─── HomePage ────────────────────────────────────────────────────────────────
+const HomePage = ({ t, lang, setPage, menuItems }) => (
+  <main>
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="icon" aria-hidden="true">🍗</div>
+      <h1 id="hero-title">{t.welcome}</h1>
+      <p>{t.tagline}</p>
+      <button className="hero-btn" onClick={() => setPage('menu')} aria-label={t.order}>
+        {t.order} 🍗
+      </button>
+    </section>
+    <section className="container" aria-labelledby="popular-title">
+      <h2 id="popular-title" className="section-title">⭐ {t.popular}</h2>
+      <div className="card-grid">
+        {menuItems.filter(i => i.badge === 'popular').slice(0, 4).map(item => (
+          <article key={item._id} className="menu-card" aria-label={item.name?.[lang] || item.name?.ar}>
+            <div className="menu-card-icon" aria-hidden="true">{item.icon || '🍗'}</div>
+            <div className="menu-card-body">
+              <h3>{item.name?.[lang] || item.name?.ar}</h3>
+              <p className="menu-price">{item.price?.toLocaleString()} {t.iqd}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+);
+
+// ─── MenuPage ────────────────────────────────────────────────────────────────
+const MenuPage = ({ t, lang, menuItems, addToCart }) => {
+  const [category, setCategory] = useState('all');
+  const [search, setSearch] = useState('');
+
+  const filtered = menuItems.filter(item => {
+    const matchCat = category === 'all' || item.category === category;
+    const matchSearch = !search ||
+      (item.name?.ar || '').includes(search) ||
+      (item.name?.en || '').toLowerCase().includes(search.toLowerCase()) ||
+      (item.name?.ku || '').includes(search);
+    return matchCat && matchSearch && item.isAvailable;
+  });
+
+  const categories = ['all', 'crispy', 'family', 'sides'];
+  const catIcons = { all: '🍽', crispy: '🍗', family: '👨‍👩‍👧‍👦', sides: '🍟' };
+
+  return (
+    <main className="container">
+      <h1 className="section-title">🍗 {t.menu}</h1>
+      <div className="category-filters" role="group" aria-label={t.menu}>
+        {categories.map(cat => (
+          <button key={cat} className={`chip ${category === cat ? 'active' : ''}`} onClick={() => setCategory(cat)} aria-pressed={category === cat}>
+            {catIcons[cat]} {cat === 'all' ? t.all : (t[cat] || cat)}
+          </button>
+        ))}
+      </div>
+      <div className="search-wrap">
+        <label htmlFor="menu-search" className="sr-only" style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>{t.search}</label>
+        <input id="menu-search" className="form-input" placeholder={t.search} value={search} onChange={e => setSearch(e.target.value)} type="search" />
+      </div>
+      <div className="card-grid" role="list">
+        {filtered.map(item => (
+          <article key={item._id} className="menu-card" role="listitem" aria-label={item.name?.[lang] || item.name?.ar}>
+            <div className="menu-card-icon" aria-hidden="true">
+              {item.badge && (
+                <span className={`menu-card-badge badge-${item.badge}`}>{t[item.badge] || item.badge}</span>
+              )}
+              {item.icon || '🍗'}
+            </div>
+            <div className="menu-card-body">
+              <h3>{item.name?.[lang] || item.name?.ar}</h3>
+              <p className="desc">{item.description?.[lang] || item.description?.ar}</p>
+              <div className="menu-card-footer">
+                <span className="menu-price">{item.price?.toLocaleString()} {t.iqd}</span>
+                <button className="btn btn-primary btn-sm" onClick={() => addToCart(item)} aria-label={`${t.addToCart} - ${item.name?.[lang] || item.name?.ar}`}>
+                  + {t.addToCart}
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      {filtered.length === 0 && <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '2rem' }}>{t.noResults}</p>}
+    </main>
+  );
+};
+
+// ─── CartPage ────────────────────────────────────────────────────────────────
 const CartPage = ({ t, lang, cart, setCart, branches, onOrderPlaced }) => {
   const [form, setForm] = useState({ name: '', phone: '', address: '', orderType: 'delivery', notes: '', branch: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  
+
   const updateQty = (id, delta) => {
     setCart(prev => prev.map(i => i._id === id ? { ...i, quantity: Math.max(1, i.quantity + delta) } : i));
   };
-  
+
   const removeItem = (id) => setCart(prev => prev.filter(i => i._id !== id));
-  
+
+  const validateForm = () => {
+    const errors = {};
+    if (!form.name.trim()) errors.name = true;
+    if (!form.phone.trim() || !validatePhone(form.phone)) errors.phone = true;
+    if (form.orderType === 'delivery' && !form.address.trim()) errors.address = true;
+    if (!form.branch) errors.branch = true;
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setError(!form.phone.trim() || !validatePhone(form.phone) ? t.invalidPhone : t.fillRequired);
+      return false;
+    }
+    setError('');
+    return true;
+  };
+
+  const handleSubmitClick = () => {
+    if (validateForm()) setShowConfirm(true);
+  };
+
   const submitOrder = async () => {
-    if (!form.name || !form.phone || !form.branch) { setError('يرجى ملء جميع الحقول المطلوبة'); return; }
     setLoading(true);
     try {
       const orderData = {
-        customer: { name: form.name, phone: form.phone, address: form.address },
+        customer: { name: form.name.trim(), phone: form.phone.trim(), address: form.address.trim() },
         items: cart.map(i => ({ menuItem: i._id, name: i.name?.[lang] || i.name?.ar, quantity: i.quantity, price: i.price, subtotal: i.price * i.quantity })),
         total,
         orderType: form.orderType,
         paymentMethod: 'cash',
         branch: form.branch,
-        notes: form.notes,
+        notes: form.notes.trim(),
       };
       const result = await api.post('/orders', orderData);
       if (result.success) {
         setCart([]);
         onOrderPlaced(result.order.orderNumber);
       } else { setError(result.error || t.error); }
-    } catch (e) { setError(t.error); }
+    } catch { setError(t.error); }
     setLoading(false);
+    setShowConfirm(false);
   };
-  
+
   if (cart.length === 0) return (
-    <div style={{ padding: '3rem', textAlign: 'center' }}>
-      <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🛒</div>
-      <p style={{ color: '#6b7280', fontSize: '1.2rem' }}>{t.empty}</p>
-    </div>
+    <main className="empty-state" role="status">
+      <div className="icon" aria-hidden="true">🛒</div>
+      <p>{t.empty}</p>
+    </main>
   );
-  
+
   return (
-    <div style={{ padding: '1.5rem', maxWidth: '800px', margin: '0 auto' }}>
-      <h2 style={{ color: '#dc2626', marginBottom: '1.5rem' }}>🛒 {t.cart}</h2>
-      {cart.map(item => (
-        <div key={item._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', border: '1px solid #e5e7eb', borderRadius: '8px', marginBottom: '0.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <span style={{ fontSize: '2rem' }}>{item.icon || '🍗'}</span>
-            <div>
-              <p style={{ fontWeight: 'bold' }}>{item.name?.[lang] || item.name?.ar}</p>
-              <p style={{ color: '#dc2626' }}>{item.price?.toLocaleString()} {t.iqd}</p>
+    <main className="container-sm">
+      <h1 className="section-title">🛒 {t.cart}</h1>
+      <div role="list" aria-label={t.cart}>
+        {cart.map(item => (
+          <div key={item._id} className="cart-item" role="listitem">
+            <div className="cart-item-info">
+              <span className="icon" aria-hidden="true">{item.icon || '🍗'}</span>
+              <div>
+                <p className="name">{item.name?.[lang] || item.name?.ar}</p>
+                <p className="price">{item.price?.toLocaleString()} {t.iqd}</p>
+              </div>
+            </div>
+            <div className="cart-item-controls">
+              <button className="qty-btn" onClick={() => updateQty(item._id, -1)} aria-label={`${t.quantity} -1`}>-</button>
+              <span className="qty-value" aria-label={`${t.quantity}: ${item.quantity}`}>{item.quantity}</span>
+              <button className="qty-btn plus" onClick={() => updateQty(item._id, 1)} aria-label={`${t.quantity} +1`}>+</button>
+              <button className="btn btn-danger btn-sm" onClick={() => removeItem(item._id)} aria-label={`${t.remove} ${item.name?.[lang] || item.name?.ar}`}>✕</button>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <button onClick={() => updateQty(item._id, -1)} style={{ background: '#f3f4f6', border: 'none', padding: '0.2rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '1.2rem' }}>-</button>
-            <span style={{ minWidth: '2rem', textAlign: 'center' }}>{item.quantity}</span>
-            <button onClick={() => updateQty(item._id, 1)} style={{ background: '#dc2626', color: 'white', border: 'none', padding: '0.2rem 0.6rem', borderRadius: '4px', cursor: 'pointer', fontSize: '1.2rem' }}>+</button>
-            <button onClick={() => removeItem(item._id)} style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '0.2rem 0.5rem', borderRadius: '4px', cursor: 'pointer', marginRight: '0.5rem' }}>✕</button>
+        ))}
+      </div>
+
+      <div className="cart-total">
+        <span>{t.total}</span>
+        <span>{total.toLocaleString()} {t.iqd}</span>
+      </div>
+
+      <form onSubmit={e => { e.preventDefault(); handleSubmitClick(); }} noValidate>
+        <div className="form-grid">
+          <div className="form-group">
+            <label className="form-label" htmlFor="cust-name">{t.name} <span className="required">*</span></label>
+            <input id="cust-name" className={`form-input ${fieldErrors.name ? 'invalid' : ''}`} value={form.name} onChange={e => setForm({...form, name: e.target.value})} required minLength={2} maxLength={100} autoComplete="name" />
           </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="cust-phone">{t.phone} <span className="required">*</span></label>
+            <input id="cust-phone" className={`form-input ${fieldErrors.phone ? 'invalid' : ''}`} type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} required pattern="[\d\s+()-]{7,15}" autoComplete="tel" dir="ltr" />
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="cust-address">{t.address} {form.orderType === 'delivery' && <span className="required">*</span>}</label>
+            <input id="cust-address" className={`form-input ${fieldErrors.address ? 'invalid' : ''}`} value={form.address} onChange={e => setForm({...form, address: e.target.value})} required={form.orderType === 'delivery'} maxLength={300} autoComplete="street-address" />
+          </div>
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label" htmlFor="cust-branch">{t.branch} <span className="required">*</span></label>
+              <select id="cust-branch" className={`form-select ${fieldErrors.branch ? 'invalid' : ''}`} value={form.branch} onChange={e => setForm({...form, branch: e.target.value})} required>
+                <option value="">{t.selectBranch}</option>
+                {branches.map(b => <option key={b._id} value={b._id}>{b.name?.[lang] || b.name?.ar}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="cust-type">{t.orderType}</label>
+              <select id="cust-type" className="form-select" value={form.orderType} onChange={e => setForm({...form, orderType: e.target.value})}>
+                <option value="delivery">{t.delivery}</option>
+                <option value="pickup">{t.pickup}</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="cust-notes">{t.notes}</label>
+            <textarea id="cust-notes" className="form-textarea" value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} maxLength={500} />
+          </div>
+          {error && <div className="alert alert-error" role="alert">{error}</div>}
+          <button type="submit" className="btn btn-primary btn-lg btn-block" disabled={loading}>
+            {loading ? <span className="spinner" /> : `🍗 ${t.submit}`}
+          </button>
         </div>
-      ))}
-      <div style={{ borderTop: '2px solid #e5e7eb', paddingTop: '1rem', marginBottom: '1.5rem' }}>
-        <strong style={{ fontSize: '1.2rem' }}>{t.total}: {total.toLocaleString()} {t.iqd}</strong>
-      </div>
-      <div style={{ display: 'grid', gap: '1rem' }}>
-        <input placeholder={t.name + ' *'} value={form.name} onChange={e => setForm({...form, name: e.target.value})} style={{ padding: '0.6rem', border: '1px solid #e5e7eb', borderRadius: '6px' }} />
-        <input placeholder={t.phone + ' *'} value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} style={{ padding: '0.6rem', border: '1px solid #e5e7eb', borderRadius: '6px' }} />
-        <input placeholder={t.address} value={form.address} onChange={e => setForm({...form, address: e.target.value})} style={{ padding: '0.6rem', border: '1px solid #e5e7eb', borderRadius: '6px' }} />
-        <select value={form.branch} onChange={e => setForm({...form, branch: e.target.value})} style={{ padding: '0.6rem', border: '1px solid #e5e7eb', borderRadius: '6px' }}>
-          <option value="">{t.selectBranch + ' *'}</option>
-          {branches.map(b => <option key={b._id} value={b._id}>{b.name?.[lang] || b.name?.ar}</option>)}
-        </select>
-        <select value={form.orderType} onChange={e => setForm({...form, orderType: e.target.value})} style={{ padding: '0.6rem', border: '1px solid #e5e7eb', borderRadius: '6px' }}>
-          <option value="delivery">{t.delivery}</option>
-          <option value="pickup">{t.pickup}</option>
-        </select>
-        <textarea placeholder={t.notes} value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} style={{ padding: '0.6rem', border: '1px solid #e5e7eb', borderRadius: '6px', resize: 'vertical', minHeight: '80px' }} />
-        {error && <p style={{ color: '#dc2626' }}>{error}</p>}
-        <button onClick={submitOrder} disabled={loading} style={{ background: '#dc2626', color: 'white', padding: '0.8rem', border: 'none', borderRadius: '8px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', opacity: loading ? 0.7 : 1 }}>
-          {loading ? t.loading : '🍗 ' + t.submit}
-        </button>
-      </div>
-    </div>
+      </form>
+
+      {showConfirm && (
+        <ConfirmModal title={t.orderReview} onConfirm={submitOrder} onCancel={() => setShowConfirm(false)} confirmText={t.confirmOrder} cancelText={t.cancel} loading={loading}>
+          <div>
+            {cart.map(item => (
+              <div key={item._id} className="order-review-item">
+                <span>{item.name?.[lang] || item.name?.ar} x{item.quantity}</span>
+                <span>{(item.price * item.quantity).toLocaleString()} {t.iqd}</span>
+              </div>
+            ))}
+            <div className="order-review-total">
+              <span>{t.total}</span>
+              <span>{total.toLocaleString()} {t.iqd}</span>
+            </div>
+          </div>
+        </ConfirmModal>
+      )}
+    </main>
   );
 };
 
-// BranchesPage
+// ─── BranchesPage ────────────────────────────────────────────────────────────
 const BranchesPage = ({ t, lang, branches }) => (
-  <div style={{ padding: '1.5rem', maxWidth: '1000px', margin: '0 auto' }}>
-    <h2 style={{ color: '#dc2626', textAlign: 'center', marginBottom: '1.5rem', fontSize: '1.8rem' }}>📍 {t.branches}</h2>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+  <main className="container" aria-labelledby="branches-title">
+    <h1 id="branches-title" className="section-title">📍 {t.branches}</h1>
+    <div className="card-grid" role="list">
       {branches.map(branch => (
-        <div key={branch._id} style={{ border: '1px solid #e5e7eb', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-            <h3 style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{branch.name?.[lang] || branch.name?.ar}</h3>
-            <span style={{ background: branch.isOpen ? '#dcfce7' : '#fee2e2', color: branch.isOpen ? '#166534' : '#dc2626', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 'bold' }}>
+        <article key={branch._id} className="branch-card" role="listitem" aria-label={branch.name?.[lang] || branch.name?.ar}>
+          <div className="branch-header">
+            <h2 style={{ fontSize: '1.1rem' }}>{branch.name?.[lang] || branch.name?.ar}</h2>
+            <span className={`status-badge ${branch.isOpen ? 'status-open' : 'status-closed'}`} role="status">
               {branch.isOpen ? t.open : t.closed}
             </span>
           </div>
-          {branch.area?.[lang] && <p style={{ color: '#6b7280', marginBottom: '0.5rem' }}>📍 {branch.area[lang]}</p>}
-          <p style={{ color: '#6b7280', marginBottom: '0.5rem' }}>📞 {branch.phone}</p>
-          <p style={{ color: '#6b7280' }}>⏰ {branch.workingHours?.open} - {branch.workingHours?.close}</p>
-        </div>
+          {branch.area?.[lang] && <p className="branch-detail"><span aria-hidden="true">📍</span> {branch.area[lang]}</p>}
+          <p className="branch-detail"><span aria-hidden="true">📞</span> <a href={`tel:${branch.phone}`} dir="ltr">{branch.phone}</a></p>
+          <p className="branch-detail"><span aria-hidden="true">⏰</span> {branch.workingHours?.open} - {branch.workingHours?.close}</p>
+        </article>
       ))}
     </div>
-  </div>
+  </main>
 );
 
-// TrackPage
-const TrackPage = ({ t }) => {
-  const [orderNum, setOrderNum] = useState('');
+// ─── TrackPage ───────────────────────────────────────────────────────────────
+const TrackPage = ({ t, defaultOrderNum }) => {
+  const [orderNum, setOrderNum] = useState(defaultOrderNum || '');
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
-  const trackOrder = async () => {
+
+  const trackOrder = useCallback(async () => {
     if (!orderNum) return;
     setLoading(true); setError('');
     try {
-      const result = await api.get('/orders/track/' + orderNum);
+      const result = await api.get('/orders/track/' + encodeURIComponent(orderNum));
       if (result.success) setOrder(result.order);
       else setError(result.error || t.error);
-    } catch (e) { setError(t.error); }
+    } catch { setError(t.error); }
     setLoading(false);
+  }, [orderNum, t]);
+
+  useEffect(() => {
+    if (defaultOrderNum) trackOrder();
+  }, [defaultOrderNum, trackOrder]);
+
+  const getStatusClass = (status) => {
+    return VALID_STATUSES.includes(status) ? `order-status status-${status}` : 'order-status status-pending';
   };
-  
+
+  const getStatusText = (status) => {
+    return VALID_STATUSES.includes(status) ? (t[status] || status) : status;
+  };
+
   return (
-    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-      <h2 style={{ color: '#dc2626', textAlign: 'center', marginBottom: '2rem' }}>📦 {t.track}</h2>
-      <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem' }}>
-        <input placeholder={t.enterOrderNumber} value={orderNum} onChange={e => setOrderNum(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && trackOrder()}
-          style={{ flex: 1, padding: '0.6rem', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '1rem' }} />
-        <button onClick={trackOrder} style={{ background: '#dc2626', color: 'white', padding: '0.6rem 1.2rem', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
-          {loading ? '...' : '🔍'}
+    <main className="container-xs">
+      <h1 className="section-title">📦 {t.track}</h1>
+      <form className="track-form" onSubmit={e => { e.preventDefault(); trackOrder(); }} role="search">
+        <label htmlFor="track-input" style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>{t.enterOrderNumber}</label>
+        <input id="track-input" className="form-input" placeholder={t.enterOrderNumber} value={orderNum} onChange={e => setOrderNum(e.target.value)} style={{ flex: 1 }} dir="ltr" inputMode="numeric" />
+        <button type="submit" className="btn btn-primary" disabled={loading} aria-label={t.trackOrder}>
+          {loading ? <span className="spinner" /> : '🔍'}
         </button>
-      </div>
-      {error && <p style={{ color: '#dc2626', textAlign: 'center' }}>{error}</p>}
+      </form>
+      {error && <div className="alert alert-error" role="alert">{error}</div>}
       {order && (
-        <div style={{ border: '1px solid #e5e7eb', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-            <h3 style={{ fontWeight: 'bold' }}>{t.orderNumber}: #{order.orderNumber}</h3>
-            <span style={{ background: statusColors[order.status] + '20', color: statusColors[order.status], padding: '0.3rem 0.8rem', borderRadius: '20px', fontWeight: 'bold' }}>
-              {t[order.status] || order.status}
+        <div className="track-result fade-in" aria-live="polite">
+          <div className="track-header">
+            <h2 style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{t.orderNumber}: #{order.orderNumber}</h2>
+            <span className={getStatusClass(order.status)}>
+              {getStatusText(order.status)}
             </span>
           </div>
-          <p style={{ color: '#6b7280' }}>{t.name}: {order.customer?.name}</p>
-          <p style={{ color: '#dc2626', fontWeight: 'bold', marginTop: '0.5rem' }}>{t.total}: {order.total?.toLocaleString()} د.ع</p>
+          <p style={{ color: 'var(--text-muted)' }}>{t.name}: {sanitize(order.customer?.name)}</p>
+          <p style={{ color: 'var(--primary)', fontWeight: 'bold', marginTop: '0.5rem' }}>{t.total}: {order.total?.toLocaleString()} {t.iqd}</p>
         </div>
       )}
-    </div>
+    </main>
   );
 };
 
-// LoginPage
+// ─── LoginPage ───────────────────────────────────────────────────────────────
 const LoginPage = ({ t, onLogin }) => {
   const [form, setForm] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
-  const handleLogin = async () => {
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!form.username.trim() || !form.password) { setError(t.fillRequired); return; }
     setLoading(true); setError('');
     try {
-      const result = await api.post('/auth/login', form);
+      const result = await api.post('/auth/login', { username: form.username.trim(), password: form.password });
       if (result.success) onLogin(result.token, result.user);
       else setError(result.error || t.error);
-    } catch (e) { setError(t.error); }
+    } catch { setError(t.error); }
     setLoading(false);
   };
-  
+
   return (
-    <div style={{ padding: '3rem', maxWidth: '400px', margin: '0 auto' }}>
-      <h2 style={{ color: '#dc2626', textAlign: 'center', marginBottom: '2rem' }}>🔐 {t.login}</h2>
-      <div style={{ display: 'grid', gap: '1rem' }}>
-        <input placeholder={t.username} value={form.username} onChange={e => setForm({...form, username: e.target.value})}
-          style={{ padding: '0.8rem', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '1rem' }} />
-        <input type="password" placeholder={t.password} value={form.password} onChange={e => setForm({...form, password: e.target.value})}
-          onKeyDown={e => e.key === 'Enter' && handleLogin()}
-          style={{ padding: '0.8rem', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '1rem' }} />
-        {error && <p style={{ color: '#dc2626' }}>{error}</p>}
-        <button onClick={handleLogin} disabled={loading} style={{ background: '#dc2626', color: 'white', padding: '0.8rem', border: 'none', borderRadius: '8px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold' }}>
-          {loading ? t.loading : t.login}
+    <main className="login-page">
+      <h1 className="section-title">🔐 {t.login}</h1>
+      <form onSubmit={handleLogin} noValidate>
+        <div className="form-group">
+          <label className="form-label" htmlFor="login-user">{t.username}</label>
+          <input id="login-user" className="form-input" value={form.username} onChange={e => setForm({...form, username: e.target.value})} required autoComplete="username" />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="login-pass">{t.password}</label>
+          <input id="login-pass" className="form-input" type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})} required autoComplete="current-password" onKeyDown={e => e.key === 'Enter' && handleLogin(e)} />
+        </div>
+        {error && <div className="alert alert-error" role="alert">{error}</div>}
+        <button type="submit" className="btn btn-primary btn-lg btn-block" disabled={loading} style={{ marginTop: '0.5rem' }}>
+          {loading ? <span className="spinner" /> : t.login}
         </button>
-      </div>
-    </div>
+      </form>
+    </main>
   );
 };
 
-// AdminDashboard
+// ─── AdminDashboard ──────────────────────────────────────────────────────────
 const AdminDashboard = ({ t, lang, token, user }) => {
   const [activeTab, setActiveTab] = useState('orders');
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState({});
   const [menuItems, setMenuItems] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [statusConfirm, setStatusConfirm] = useState(null);
+  const ITEMS_PER_PAGE = 20;
 
-  useEffect(() => {
-    loadData();
-  }, [activeTab]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
+    setError('');
     try {
       if (activeTab === 'orders') {
-        const r = await api.get('/orders', token);
-        if (r.success) setOrders(r.orders);
+        const r = await api.get(`/orders?page=${currentPage}&limit=${ITEMS_PER_PAGE}`, token);
+        if (r.success) { setOrders(r.orders); setTotalPages(r.pages || 1); }
       } else if (activeTab === 'dashboard') {
         const r = await api.get('/stats/dashboard', token);
         if (r.success) setStats(r.stats);
@@ -435,140 +684,191 @@ const AdminDashboard = ({ t, lang, token, user }) => {
       } else if (activeTab === 'branches') {
         const r = await api.get('/branches', token);
         if (r.success) setBranches(r.branches);
-      } else if (activeTab === 'users' && user?.role === 'admin') {
-        const r = await api.get('/auth/users', token);
-        if (r.success) setUsers(r.users);
       }
-    } catch (e) {}
+    } catch {
+      setError(t.loadError);
+    }
     setLoading(false);
+  }, [activeTab, currentPage, token, t.loadError]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleStatusChange = (orderId, newStatus) => {
+    setStatusConfirm({ orderId, newStatus });
   };
 
-  const updateStatus = async (orderId, status) => {
-    const r = await api.put('/orders/' + orderId + '/status', { status }, token);
-    if (r.success) setOrders(prev => prev.map(o => o._id === orderId ? {...o, status} : o));
+  const confirmStatusUpdate = async () => {
+    if (!statusConfirm) return;
+    const { orderId, newStatus } = statusConfirm;
+    try {
+      const r = await api.put('/orders/' + orderId + '/status', { status: newStatus }, token);
+      if (r.success) setOrders(prev => prev.map(o => o._id === orderId ? {...o, status: newStatus} : o));
+    } catch {}
+    setStatusConfirm(null);
   };
 
-  const tabs = ['dashboard', 'orders', 'menu', 'branches', ...(user?.role === 'admin' ? ['users'] : [])];
+  const tabs = ['dashboard', 'orders', 'menu', 'branches'];
 
   return (
-    <div style={{ padding: '1.5rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ color: '#dc2626', marginBottom: '1.5rem' }}>⚙️ {t.admin} - {user?.name}</h2>
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+    <main className="container">
+      <h1 className="section-title">⚙️ {t.admin} - {sanitize(user?.name)}</h1>
+      <div className="admin-tabs" role="tablist">
         {tabs.map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: '0.5rem 1rem', borderRadius: '6px', border: '2px solid #dc2626', background: activeTab === tab ? '#dc2626' : 'white', color: activeTab === tab ? 'white' : '#dc2626', cursor: 'pointer', fontWeight: 'bold' }}>
+          <button key={tab} role="tab" aria-selected={activeTab === tab} className={`btn ${activeTab === tab ? 'btn-primary' : 'btn-outline'}`} onClick={() => { setActiveTab(tab); setCurrentPage(1); }}>
             {t[tab] || tab}
           </button>
         ))}
-        <button onClick={loadData} style={{ padding: '0.5rem 1rem', borderRadius: '6px', border: '2px solid #6b7280', background: 'white', color: '#6b7280', cursor: 'pointer' }}>🔄</button>
+        <button className="btn btn-secondary" onClick={loadData} aria-label={t.retry}>🔄</button>
       </div>
-      
-      {loading && <p style={{ textAlign: 'center', color: '#6b7280' }}>{t.loading}</p>}
-      
+
+      {error && <div className="alert alert-error" role="alert">{error} <button className="btn btn-sm btn-secondary" onClick={loadData} style={{ marginInlineStart: '0.5rem' }}>{t.retry}</button></div>}
+      {loading && <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>{t.loading}</p>}
+
+      {/* Dashboard Tab */}
       {activeTab === 'dashboard' && !loading && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+        <div className="admin-stat-grid" role="list">
           {[
             { label: t.todayOrders, value: stats.todayOrders || 0, icon: '📦', color: '#3b82f6' },
             { label: t.totalRevenue, value: (stats.totalRevenue || 0).toLocaleString() + ' ' + t.iqd, icon: '💰', color: '#10b981' },
-            { label: 'طلبات قيد الانتظار', value: stats.pendingOrders || 0, icon: '⏳', color: '#f59e0b' },
-            { label: 'إجمالي الطلبات', value: stats.totalOrders || 0, icon: '📊', color: '#8b5cf6' },
+            { label: t.pendingOrders, value: stats.pendingOrders || 0, icon: '⏳', color: '#f59e0b' },
+            { label: t.totalOrdersLabel, value: stats.totalOrders || 0, icon: '📊', color: '#8b5cf6' },
           ].map(card => (
-            <div key={card.label} style={{ border: '1px solid #e5e7eb', borderRadius: '12px', padding: '1.5rem', borderRight: '4px solid ' + card.color }}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{card.icon}</div>
-              <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: card.color }}>{card.value}</div>
-              <div style={{ color: '#6b7280', fontSize: '0.9rem' }}>{card.label}</div>
+            <div key={card.label} className="stat-card" role="listitem" style={{ borderColor: card.color }}>
+              <div className="icon" aria-hidden="true">{card.icon}</div>
+              <div className="value" style={{ color: card.color }}>{card.value}</div>
+              <div className="label">{card.label}</div>
             </div>
           ))}
         </div>
       )}
-      
+
+      {/* Orders Tab */}
       {activeTab === 'orders' && !loading && (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ background: '#f9fafb' }}>
-                {['#', t.name, t.phone, t.total, t.status, t.orderType, 'الإجراء'].map(h => (
-                  <th key={h} style={{ padding: '0.75rem', textAlign: 'right', borderBottom: '2px solid #e5e7eb', fontWeight: 'bold' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map(order => (
-                <tr key={order._id} style={{ borderBottom: '1px solid #e5e7eb' }}>
-                  <td style={{ padding: '0.75rem', fontWeight: 'bold', color: '#dc2626' }}>#{order.orderNumber}</td>
-                  <td style={{ padding: '0.75rem' }}>{order.customer?.name}</td>
-                  <td style={{ padding: '0.75rem' }}>{order.customer?.phone}</td>
-                  <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{order.total?.toLocaleString()}</td>
-                  <td style={{ padding: '0.75rem' }}>
-                    <span style={{ background: statusColors[order.status] + '20', color: statusColors[order.status], padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold' }}>
-                      {t[order.status] || order.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: '0.75rem' }}>{t[order.orderType] || order.orderType}</td>
-                  <td style={{ padding: '0.75rem' }}>
-                    <select value={order.status} onChange={e => updateStatus(order._id, e.target.value)} style={{ padding: '0.3rem', borderRadius: '4px', border: '1px solid #e5e7eb', fontSize: '0.85rem' }}>
-                      {['pending','confirmed','preparing','ready','delivering','delivered','cancelled'].map(s => (
-                        <option key={s} value={s}>{t[s] || s}</option>
-                      ))}
-                    </select>
-                  </td>
+        <>
+          <div className="orders-table-wrap">
+            <table className="orders-table" role="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">{t.name}</th>
+                  <th scope="col">{t.phone}</th>
+                  <th scope="col">{t.total}</th>
+                  <th scope="col">{t.status}</th>
+                  <th scope="col">{t.orderType}</th>
+                  <th scope="col">{t.action}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {orders.length === 0 && <p style={{ textAlign: 'center', color: '#6b7280', padding: '2rem' }}>لا توجد طلبات</p>}
-        </div>
+              </thead>
+              <tbody>
+                {orders.map(order => (
+                  <tr key={order._id}>
+                    <td style={{ fontWeight: 'bold', color: 'var(--primary)' }}>#{order.orderNumber}</td>
+                    <td>{sanitize(order.customer?.name)}</td>
+                    <td dir="ltr">{sanitize(order.customer?.phone)}</td>
+                    <td style={{ fontWeight: 'bold' }}>{order.total?.toLocaleString()}</td>
+                    <td>
+                      <span className={`order-status ${VALID_STATUSES.includes(order.status) ? `status-${order.status}` : 'status-pending'}`} style={{ fontSize: '0.8rem', padding: '0.2rem 0.5rem' }}>
+                        {t[order.status] || order.status}
+                      </span>
+                    </td>
+                    <td>{t[order.orderType] || order.orderType}</td>
+                    <td>
+                      <label htmlFor={`status-${order._id}`} style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>{t.status}</label>
+                      <select id={`status-${order._id}`} value={order.status} onChange={e => handleStatusChange(order._id, e.target.value)} className="form-select" style={{ padding: '0.3rem', fontSize: '0.85rem', minWidth: '120px' }}>
+                        {VALID_STATUSES.map(s => (
+                          <option key={s} value={s}>{t[s] || s}</option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {orders.length === 0 && <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>{t.noOrders}</p>}
+          {totalPages > 1 && (
+            <nav className="pagination" aria-label="Pagination">
+              <button className="btn btn-sm btn-secondary" disabled={currentPage <= 1} onClick={() => setCurrentPage(p => p - 1)} aria-label={t.prev}>&laquo; {t.prev}</button>
+              <span>{t.page} {currentPage} / {totalPages}</span>
+              <button className="btn btn-sm btn-secondary" disabled={currentPage >= totalPages} onClick={() => setCurrentPage(p => p + 1)} aria-label={t.next}>{t.next} &raquo;</button>
+            </nav>
+          )}
+        </>
       )}
-      
+
+      {/* Menu Tab */}
       {activeTab === 'menu' && !loading && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
+        <div className="card-grid-sm" role="list">
           {menuItems.map(item => (
-            <div key={item._id} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '1rem' }}>
-              <div style={{ fontSize: '2rem', textAlign: 'center', marginBottom: '0.5rem' }}>{item.icon || '🍗'}</div>
-              <h4 style={{ fontWeight: 'bold' }}>{item.name?.[lang] || item.name?.ar}</h4>
-              <p style={{ color: '#dc2626', fontWeight: 'bold' }}>{item.price?.toLocaleString()} {t.iqd}</p>
-              <p style={{ fontSize: '0.8rem', color: '#6b7280' }}>{item.category} | {item.isAvailable ? '✅' : '❌'}</p>
+            <div key={item._id} className="admin-card" role="listitem">
+              <div className="icon" aria-hidden="true">{item.icon || '🍗'}</div>
+              <h4>{item.name?.[lang] || item.name?.ar}</h4>
+              <p className="price">{item.price?.toLocaleString()} {t.iqd}</p>
+              <p className="meta">{t[item.category] || item.category} | {item.isAvailable ? '✅ ' + t.open : '❌ ' + t.closed}</p>
             </div>
           ))}
         </div>
       )}
-      
+
+      {/* Branches Tab */}
       {activeTab === 'branches' && !loading && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+        <div className="card-grid" role="list">
           {branches.map(branch => (
-            <div key={branch._id} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '1rem' }}>
-              <h4 style={{ fontWeight: 'bold' }}>{branch.name?.[lang] || branch.name?.ar}</h4>
-              <p style={{ color: '#6b7280' }}>📞 {branch.phone}</p>
-              <p style={{ color: '#6b7280' }}>⏰ {branch.workingHours?.open} - {branch.workingHours?.close}</p>
-              <span style={{ background: branch.isOpen ? '#dcfce7' : '#fee2e2', color: branch.isOpen ? '#166534' : '#dc2626', padding: '0.2rem 0.6rem', borderRadius: '4px', fontSize: '0.85rem' }}>
+            <div key={branch._id} className="admin-card" role="listitem">
+              <h4>{branch.name?.[lang] || branch.name?.ar}</h4>
+              <p className="meta"><span aria-hidden="true">📞</span> {branch.phone}</p>
+              <p className="meta"><span aria-hidden="true">⏰</span> {branch.workingHours?.open} - {branch.workingHours?.close}</p>
+              <span className={`status-badge ${branch.isOpen ? 'status-open' : 'status-closed'}`} role="status" style={{ display: 'inline-block', marginTop: '0.5rem' }}>
                 {branch.isOpen ? t.open : t.closed}
               </span>
             </div>
           ))}
         </div>
       )}
-    </div>
+
+      {/* Status Change Confirmation */}
+      {statusConfirm && (
+        <ConfirmModal title={t.confirmStatusChange} onConfirm={confirmStatusUpdate} onCancel={() => setStatusConfirm(null)} confirmText={t.yes} cancelText={t.no}>
+          <p>{t.confirmStatusChange}</p>
+        </ConfirmModal>
+      )}
+    </main>
   );
 };
 
-// ─── Main App ─────────────────────────────────────────────────────────────────
-export default function App() {
-  const [lang, setLang] = useState('ar');
+// ─── Main App ────────────────────────────────────────────────────────────────
+function AppContent() {
+  const [lang, setLang] = useState(() => localStorage.getItem('fc_lang') || 'ar');
   const [page, setPage] = useState('home');
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(getCartFromStorage);
   const [menuItems, setMenuItems] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem('fc_token') || '');
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('fc_user') || 'null'));
+  const [token, setToken] = useState(() => localStorage.getItem('fc_token') || '');
+  const [user, setUser] = useState(() => { try { return JSON.parse(localStorage.getItem('fc_user') || 'null'); } catch { return null; } });
   const [lastOrderNum, setLastOrderNum] = useState(null);
   const [loading, setLoading] = useState(true);
-  
-  const t = translations[lang];
-  
-  // Detect RTL/LTR
+  const [loadError, setLoadError] = useState(false);
+  const [toast, setToast] = useState('');
+
+  const t = translations[lang] || translations.ar;
+  const cartCount = cart.reduce((a, i) => a + i.quantity, 0);
+
+  // Save cart to localStorage
+  useEffect(() => { saveCartToStorage(cart); }, [cart]);
+
+  // Save language preference
+  useEffect(() => { localStorage.setItem('fc_lang', lang); }, [lang]);
+
+  // Set direction
   useEffect(() => {
-    document.dir = lang === 'en' ? 'ltr' : 'rtl';
+    document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+    document.documentElement.lang = lang;
   }, [lang]);
-  
+
+  // Scroll to top on page change
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [page]);
+
   // Load initial data
   useEffect(() => {
     const loadInitial = async () => {
@@ -579,20 +879,23 @@ export default function App() {
         ]);
         if (menuRes.success) setMenuItems(menuRes.items);
         if (branchRes.success) setBranches(branchRes.branches);
-      } catch (e) {}
+      } catch {
+        setLoadError(true);
+      }
       setLoading(false);
     };
     loadInitial();
   }, []);
-  
-  const addToCart = (item) => {
+
+  const addToCart = useCallback((item) => {
     setCart(prev => {
       const existing = prev.find(i => i._id === item._id);
       if (existing) return prev.map(i => i._id === item._id ? {...i, quantity: i.quantity + 1} : i);
       return [...prev, { ...item, quantity: 1 }];
     });
-  };
-  
+    setToast(t.addedToCart);
+  }, [t.addedToCart]);
+
   const handleLogin = (newToken, newUser) => {
     setToken(newToken);
     setUser(newUser);
@@ -600,7 +903,7 @@ export default function App() {
     localStorage.setItem('fc_user', JSON.stringify(newUser));
     setPage('admin');
   };
-  
+
   const handleLogout = () => {
     setToken('');
     setUser(null);
@@ -608,27 +911,40 @@ export default function App() {
     localStorage.removeItem('fc_user');
     setPage('home');
   };
-  
+
   const handleOrderPlaced = (orderNum) => {
     setLastOrderNum(orderNum);
+    setToast(t.orderSent);
     setPage('track');
   };
-  
+
   if (loading) return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#fef2f2' }}>
+    <div className="loading-screen" role="status" aria-label={t.loading}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: '5rem', animation: 'pulse 1s infinite' }}>🍗</div>
-        <p style={{ color: '#dc2626', fontSize: '1.2rem', fontWeight: 'bold', marginTop: '1rem' }}>{t.loading}</p>
+        <div className="icon" aria-hidden="true">🍗</div>
+        <p>{t.loading}</p>
       </div>
     </div>
   );
-  
+
+  if (loadError) return (
+    <div className="error-boundary" role="alert">
+      <div className="icon" aria-hidden="true">⚠️</div>
+      <h2>{t.error}</h2>
+      <p>{t.loadError}</p>
+      <button className="btn btn-primary btn-lg" onClick={() => window.location.reload()}>{t.retry}</button>
+    </div>
+  );
+
   return (
-    <div style={{ minHeight: '100vh', background: '#fff', fontFamily: lang === 'en' ? '-apple-system, sans-serif' : 'Tajawal, -apple-system, sans-serif' }}>
-      <Navbar lang={lang} setLang={setLang} page={page} setPage={setPage} cart={cart} user={user} onLogout={handleLogout} />
-      
-      <div style={{ minHeight: 'calc(100vh - 60px)' }}>
-        {page === 'home' && <HomePage t={t} setPage={setPage} menuItems={menuItems} branches={branches} />}
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <a href="#main-content" className="sr-only" style={{ position: 'absolute', top: '-100px', left: 0, background: 'var(--primary)', color: 'white', padding: '0.5rem 1rem', zIndex: 500 }}>
+        Skip to content
+      </a>
+      <Navbar lang={lang} setLang={setLang} page={page} setPage={setPage} cartCount={cartCount} user={user} onLogout={handleLogout} t={t} />
+
+      <div id="main-content" style={{ flex: 1 }}>
+        {page === 'home' && <HomePage t={t} lang={lang} setPage={setPage} menuItems={menuItems} />}
         {page === 'menu' && <MenuPage t={t} lang={lang} menuItems={menuItems} addToCart={addToCart} />}
         {page === 'cart' && <CartPage t={t} lang={lang} cart={cart} setCart={setCart} branches={branches} onOrderPlaced={handleOrderPlaced} />}
         {page === 'branches' && <BranchesPage t={t} lang={lang} branches={branches} />}
@@ -637,12 +953,22 @@ export default function App() {
         {page === 'admin' && user && <AdminDashboard t={t} lang={lang} token={token} user={user} />}
         {page === 'admin' && !user && <LoginPage t={t} onLogin={handleLogin} />}
       </div>
-      
-      <footer style={{ background: '#1f2937', color: 'white', padding: '2rem', textAlign: 'center', marginTop: '2rem' }}>
-        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🍗</div>
-        <p style={{ fontWeight: 'bold', marginBottom: '0.3rem' }}>{t.appName}</p>
-        <p style={{ color: '#9ca3af', fontSize: '0.9rem' }}>© 2026 Fried Chicken. All rights reserved.</p>
+
+      <footer className="footer" role="contentinfo">
+        <div className="icon" aria-hidden="true">🍗</div>
+        <p className="name">{t.appName}</p>
+        <p className="copy">&copy; 2026 {t.appName}. All rights reserved.</p>
       </footer>
+
+      <Toast message={toast} onClose={() => setToast('')} />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
   );
 }
