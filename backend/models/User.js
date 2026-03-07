@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: [true, 'Username is required'], unique: true, trim: true, minlength: 3 },
-  password: { type: String, required: [true, 'Password is required'], minlength: 6, select: false },
+  password: { type: String, required: [true, 'Password is required'], minlength: 8, select: false },
   role: { type: String, enum: ['admin', 'manager', 'staff'], default: 'staff' },
   name: { type: String, required: true },
   branch: { type: mongoose.Schema.Types.ObjectId, ref: 'Branch' },
