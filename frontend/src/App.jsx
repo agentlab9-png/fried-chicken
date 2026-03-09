@@ -65,6 +65,20 @@ const translations = {
     retry: 'إعادة المحاولة', menuNav: 'قائمة التنقل',
     prev: 'السابق', next: 'التالي', page: 'صفحة',
     installApp: 'تنصيب التطبيق', installPrompt: 'نصّب فرايد تشكين على شاشتك الرئيسية!', install: 'تنصيب', dismiss: 'لاحقاً',
+    about: 'من نحن', contactUs: 'اتصل بنا', aboutTitle: 'من نحن', aboutDesc: 'فرايد تشكين - مجموعة مطاعم الدجاج المقرمش الاولى في العراق. نقدم أجود أنواع الدجاج المقرمش بوصفة خاصة ومذاق لا يُنسى.',
+    ourMission: 'رسالتنا', missionDesc: 'تقديم أفضل تجربة طعام للدجاج المقرمش بجودة عالية وأسعار مناسبة مع خدمة سريعة ومميزة.',
+    ourBranches: 'فروعنا', branchCount: '12 فرع في بغداد', followUs: 'تابعنا', phone: 'الهاتف',
+    reports: 'التقارير', weeklyRevenue: 'إيرادات الأسبوع', topItems: 'الأكثر مبيعاً', revenue: 'الإيرادات',
+    addMenuItem: 'إضافة عنصر', editMenuItem: 'تعديل عنصر', deleteMenuItem: 'حذف عنصر', confirmDelete: 'هل أنت متأكد من الحذف؟',
+    addBranch: 'إضافة فرع', editBranch: 'تعديل فرع', deleteBranch: 'حذف فرع',
+    itemName: 'اسم العنصر', itemNameEn: 'الاسم بالإنجليزي', itemNameKu: 'الاسم بالكردي',
+    descAr: 'الوصف بالعربي', descEn: 'الوصف بالإنجليزي', descKu: 'الوصف بالكردي',
+    category: 'التصنيف', icon: 'الأيقونة', badge: 'الشارة', available: 'متوفر', notAvailable: 'غير متوفر',
+    branchNameAr: 'اسم الفرع بالعربي', branchNameEn: 'اسم الفرع بالإنجليزي', branchNameKu: 'اسم الفرع بالكردي',
+    areaAr: 'المنطقة بالعربي', areaEn: 'المنطقة بالإنجليزي', areaKu: 'المنطقة بالكردي',
+    openTime: 'وقت الفتح', closeTime: 'وقت الإغلاق', isOpen: 'مفتوح الآن',
+    newOrderNotif: 'طلب جديد!', enableNotifications: 'تفعيل الإشعارات', none: 'بدون',
+    todayRevenueLabel: 'إيرادات اليوم', orderCount: 'عدد الطلبات',
   },
   en: {
     appName: 'Fried Chicken', home: 'Home', menu: 'Menu', order: 'Order Now',
@@ -96,6 +110,20 @@ const translations = {
     retry: 'Retry', menuNav: 'Navigation menu',
     prev: 'Previous', next: 'Next', page: 'Page',
     installApp: 'Install App', installPrompt: 'Install Fried Chicken on your home screen!', install: 'Install', dismiss: 'Later',
+    about: 'About Us', contactUs: 'Contact Us', aboutTitle: 'About Us', aboutDesc: 'Fried Chicken - The first crispy chicken restaurant chain in Iraq. We serve the finest crispy chicken with a special recipe and unforgettable taste.',
+    ourMission: 'Our Mission', missionDesc: 'To provide the best crispy chicken dining experience with high quality, affordable prices, and fast, outstanding service.',
+    ourBranches: 'Our Branches', branchCount: '12 branches in Baghdad', followUs: 'Follow Us', phone: 'Phone',
+    reports: 'Reports', weeklyRevenue: 'Weekly Revenue', topItems: 'Top Selling', revenue: 'Revenue',
+    addMenuItem: 'Add Item', editMenuItem: 'Edit Item', deleteMenuItem: 'Delete Item', confirmDelete: 'Are you sure you want to delete?',
+    addBranch: 'Add Branch', editBranch: 'Edit Branch', deleteBranch: 'Delete Branch',
+    itemName: 'Item Name', itemNameEn: 'Name (English)', itemNameKu: 'Name (Kurdish)',
+    descAr: 'Description (Arabic)', descEn: 'Description (English)', descKu: 'Description (Kurdish)',
+    category: 'Category', icon: 'Icon', badge: 'Badge', available: 'Available', notAvailable: 'Not Available',
+    branchNameAr: 'Branch Name (Arabic)', branchNameEn: 'Branch Name (English)', branchNameKu: 'Branch Name (Kurdish)',
+    areaAr: 'Area (Arabic)', areaEn: 'Area (English)', areaKu: 'Area (Kurdish)',
+    openTime: 'Opening Time', closeTime: 'Closing Time', isOpen: 'Currently Open',
+    newOrderNotif: 'New Order!', enableNotifications: 'Enable Notifications', none: 'None',
+    todayRevenueLabel: "Today's Revenue", orderCount: 'Order Count',
   },
   ku: {
     appName: 'فرایەد چیكن', home: 'سەرەكی', menu: 'مێنیو', order: 'داواكاری',
@@ -130,6 +158,20 @@ const translations = {
     retry: 'دووبارە', menuNav: 'مێنیوی ڕێنیشاندەر',
     prev: 'پێشوو', next: 'دواتر', page: 'لاپەڕە',
     installApp: 'دابەزاندنی ئەپ', installPrompt: 'فرایەد چیکن دابەزێنە بۆ شاشەی سەرەكی!', install: 'دابەزاندن', dismiss: 'دواتر',
+    about: 'دەربارەی ئێمە', contactUs: 'پەیوەندیمان پێوە بکە', aboutTitle: 'دەربارەی ئێمە', aboutDesc: 'فرایەد چیکن - یەکەمین چەینی چێشتخانەی مریشکی کریسپی لە عێراق. باشترین مریشکی کریسپی پێشکەش دەکەین بە ڕەچەتەیەکی تایبەت و تامێکی نەبیرکراو.',
+    ourMission: 'ئەرکی ئێمە', missionDesc: 'پێشکەشکردنی باشترین ئەزموونی خواردنی مریشکی کریسپی بە کوالیتی بەرز و نرخی گونجاو و خزمەتگوزاری خێرا و جیاواز.',
+    ourBranches: 'لقەکانمان', branchCount: '١٢ لق لە بەغدا', followUs: 'شوێنمان بکەوە', phone: 'تەلەفۆن',
+    reports: 'ڕاپۆرتەکان', weeklyRevenue: 'داهاتی هەفتانە', topItems: 'زۆرترین فرۆش', revenue: 'داهات',
+    addMenuItem: 'زیادکردنی بەرهەم', editMenuItem: 'دەستکاری بەرهەم', deleteMenuItem: 'سڕینەوەی بەرهەم', confirmDelete: 'دڵنیایت لە سڕینەوە؟',
+    addBranch: 'زیادکردنی لق', editBranch: 'دەستکاری لق', deleteBranch: 'سڕینەوەی لق',
+    itemName: 'ناوی بەرهەم', itemNameEn: 'ناو (ئینگلیزی)', itemNameKu: 'ناو (کوردی)',
+    descAr: 'وەسف (عەرەبی)', descEn: 'وەسف (ئینگلیزی)', descKu: 'وەسف (کوردی)',
+    category: 'جۆر', icon: 'ئایکۆن', badge: 'نیشانە', available: 'بەردەستە', notAvailable: 'بەردەست نییە',
+    branchNameAr: 'ناوی لق (عەرەبی)', branchNameEn: 'ناوی لق (ئینگلیزی)', branchNameKu: 'ناوی لق (کوردی)',
+    areaAr: 'ناوچە (عەرەبی)', areaEn: 'ناوچە (ئینگلیزی)', areaKu: 'ناوچە (کوردی)',
+    openTime: 'کاتی کردنەوە', closeTime: 'کاتی داخستن', isOpen: 'ئێستا کراوەیە',
+    newOrderNotif: 'داواکاری نوێ!', enableNotifications: 'چالاککردنی ئاگاداری', none: 'هیچ',
+    todayRevenueLabel: 'داهاتی ئەمڕۆ', orderCount: 'ژمارەی داواکارییەکان',
   }
 };
 
@@ -209,7 +251,7 @@ const ConfirmModal = ({ title, children, onConfirm, onCancel, confirmText, cance
 const Navbar = ({ lang, setLang, page, setPage, cartCount, user, onLogout, t }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const navItems = ['home', 'menu', 'branches', 'track'];
+  const navItems = ['home', 'menu', 'branches', 'track', 'about'];
 
   const handleNav = (p) => {
     setPage(p);
@@ -272,7 +314,7 @@ const Navbar = ({ lang, setLang, page, setPage, cartCount, user, onLogout, t }) 
           </div>
           {navItems.map(p => (
             <button key={p} className={`mobile-nav-link ${page === p ? 'active' : ''}`} onClick={() => handleNav(p)} aria-current={page === p ? 'page' : undefined}>
-              {p === 'home' ? '🏠' : p === 'menu' ? '🍗' : p === 'branches' ? '📍' : '📦'} {t[p]}
+              {p === 'home' ? '🏠' : p === 'menu' ? '🍗' : p === 'branches' ? '📍' : p === 'about' ? 'ℹ️' : '📦'} {t[p]}
             </button>
           ))}
           <button className={`mobile-nav-link ${page === 'cart' ? 'active' : ''}`} onClick={() => handleNav('cart')}>
@@ -657,6 +699,300 @@ const LoginPage = ({ t, onLogin }) => {
   );
 };
 
+// ─── AboutPage ──────────────────────────────────────────────────────────────
+const AboutPage = ({ t, lang }) => (
+  <main>
+    <section className="hero" style={{ paddingBottom: '3rem' }}>
+      <div className="icon" aria-hidden="true">🍗</div>
+      <h1>{t.aboutTitle}</h1>
+      <p style={{ maxWidth: '600px', margin: '1rem auto 0' }}>{t.aboutDesc}</p>
+    </section>
+    <div className="container">
+      <div className="about-grid">
+        <div className="about-card">
+          <div className="about-card-icon">🎯</div>
+          <h3>{t.ourMission}</h3>
+          <p>{t.missionDesc}</p>
+        </div>
+        <div className="about-card">
+          <div className="about-card-icon">📍</div>
+          <h3>{t.ourBranches}</h3>
+          <p>{t.branchCount}</p>
+        </div>
+        <div className="about-card">
+          <div className="about-card-icon">📞</div>
+          <h3>{t.contactUs}</h3>
+          <p dir="ltr" style={{ fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--primary)' }}>0773 336 6656</p>
+        </div>
+        <div className="about-card">
+          <div className="about-card-icon">🌐</div>
+          <h3>{t.followUs}</h3>
+          <a href="https://www.facebook.com/share/1Abj9cJqfg/" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ marginTop: '0.5rem' }}>
+            Facebook 📘
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+);
+
+// ─── MenuFormModal ──────────────────────────────────────────────────────────
+const MenuFormModal = ({ t, item, onSave, onCancel, loading }) => {
+  const [form, setForm] = useState(item ? {
+    nameAr: item.name?.ar || '', nameEn: item.name?.en || '', nameKu: item.name?.ku || '',
+    descAr: item.description?.ar || '', descEn: item.description?.en || '', descKu: item.description?.ku || '',
+    category: item.category || 'crispy', price: item.price || '', icon: item.icon || '🍗',
+    badge: item.badge || '', isAvailable: item.isAvailable !== false,
+  } : {
+    nameAr: '', nameEn: '', nameKu: '', descAr: '', descEn: '', descKu: '',
+    category: 'crispy', price: '', icon: '🍗', badge: '', isAvailable: true,
+  });
+
+  const handleSubmit = () => {
+    if (!form.nameAr.trim() || !form.price) return;
+    onSave({
+      name: { ar: form.nameAr.trim(), en: form.nameEn.trim(), ku: form.nameKu.trim() },
+      description: { ar: form.descAr.trim(), en: form.descEn.trim(), ku: form.descKu.trim() },
+      category: form.category, price: Number(form.price), icon: form.icon,
+      badge: form.badge || null, isAvailable: form.isAvailable,
+    });
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+        <h3>{item ? t.editMenuItem : t.addMenuItem}</h3>
+        <div className="form-grid">
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label">{t.itemName} <span className="required">*</span></label>
+              <input className="form-input" value={form.nameAr} onChange={e => setForm({...form, nameAr: e.target.value})} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.itemNameEn}</label>
+              <input className="form-input" value={form.nameEn} onChange={e => setForm({...form, nameEn: e.target.value})} dir="ltr" />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="form-label">{t.itemNameKu}</label>
+            <input className="form-input" value={form.nameKu} onChange={e => setForm({...form, nameKu: e.target.value})} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">{t.descAr}</label>
+            <textarea className="form-textarea" value={form.descAr} onChange={e => setForm({...form, descAr: e.target.value})} />
+          </div>
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label">{t.descEn}</label>
+              <textarea className="form-textarea" value={form.descEn} onChange={e => setForm({...form, descEn: e.target.value})} dir="ltr" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.descKu}</label>
+              <textarea className="form-textarea" value={form.descKu} onChange={e => setForm({...form, descKu: e.target.value})} />
+            </div>
+          </div>
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label">{t.price} <span className="required">*</span></label>
+              <input className="form-input" type="number" min="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} dir="ltr" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.category}</label>
+              <select className="form-select" value={form.category} onChange={e => setForm({...form, category: e.target.value})}>
+                <option value="crispy">{t.crispy}</option>
+                <option value="family">{t.family}</option>
+                <option value="sides">{t.sides}</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label">{t.icon}</label>
+              <input className="form-input" value={form.icon} onChange={e => setForm({...form, icon: e.target.value})} style={{ fontSize: '1.5rem', textAlign: 'center' }} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.badge}</label>
+              <select className="form-select" value={form.badge} onChange={e => setForm({...form, badge: e.target.value})}>
+                <option value="">{t.none}</option>
+                <option value="popular">{t.popular}</option>
+                <option value="new">{t.new}</option>
+                <option value="spicy">{t.spicy}</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}>
+            <input type="checkbox" id="item-avail" checked={form.isAvailable} onChange={e => setForm({...form, isAvailable: e.target.checked})} />
+            <label htmlFor="item-avail" className="form-label" style={{ margin: 0 }}>{t.available}</label>
+          </div>
+        </div>
+        <div className="modal-actions">
+          <button className="btn btn-secondary" onClick={onCancel}>{t.cancel}</button>
+          <button className="btn btn-primary" onClick={handleSubmit} disabled={loading || !form.nameAr.trim() || !form.price}>
+            {loading ? <span className="spinner" /> : t.save}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── BranchFormModal ────────────────────────────────────────────────────────
+const BranchFormModal = ({ t, branch, onSave, onCancel, loading }) => {
+  const [form, setForm] = useState(branch ? {
+    nameAr: branch.name?.ar || '', nameEn: branch.name?.en || '', nameKu: branch.name?.ku || '',
+    areaAr: branch.area?.ar || '', areaEn: branch.area?.en || '', areaKu: branch.area?.ku || '',
+    phone: branch.phone || '', address: branch.address || '',
+    openTime: branch.workingHours?.open || '11:00', closeTime: branch.workingHours?.close || '23:00',
+    isOpen: branch.isOpen !== false,
+  } : {
+    nameAr: '', nameEn: '', nameKu: '', areaAr: '', areaEn: '', areaKu: '',
+    phone: '', address: '', openTime: '11:00', closeTime: '23:00', isOpen: true,
+  });
+
+  const handleSubmit = () => {
+    if (!form.nameAr.trim() || !form.phone.trim()) return;
+    onSave({
+      name: { ar: form.nameAr.trim(), en: form.nameEn.trim(), ku: form.nameKu.trim() },
+      area: { ar: form.areaAr.trim(), en: form.areaEn.trim(), ku: form.areaKu.trim() },
+      phone: form.phone.trim(), address: form.address.trim(),
+      workingHours: { open: form.openTime, close: form.closeTime },
+      isOpen: form.isOpen,
+    });
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+        <h3>{branch ? t.editBranch : t.addBranch}</h3>
+        <div className="form-grid">
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label">{t.branchNameAr} <span className="required">*</span></label>
+              <input className="form-input" value={form.nameAr} onChange={e => setForm({...form, nameAr: e.target.value})} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.branchNameEn}</label>
+              <input className="form-input" value={form.nameEn} onChange={e => setForm({...form, nameEn: e.target.value})} dir="ltr" />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="form-label">{t.branchNameKu}</label>
+            <input className="form-input" value={form.nameKu} onChange={e => setForm({...form, nameKu: e.target.value})} />
+          </div>
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label">{t.areaAr}</label>
+              <input className="form-input" value={form.areaAr} onChange={e => setForm({...form, areaAr: e.target.value})} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.areaEn}</label>
+              <input className="form-input" value={form.areaEn} onChange={e => setForm({...form, areaEn: e.target.value})} dir="ltr" />
+            </div>
+          </div>
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label">{t.phone} <span className="required">*</span></label>
+              <input className="form-input" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} dir="ltr" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.address}</label>
+              <input className="form-input" value={form.address} onChange={e => setForm({...form, address: e.target.value})} />
+            </div>
+          </div>
+          <div className="form-grid-2">
+            <div className="form-group">
+              <label className="form-label">{t.openTime}</label>
+              <input className="form-input" type="time" value={form.openTime} onChange={e => setForm({...form, openTime: e.target.value})} dir="ltr" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.closeTime}</label>
+              <input className="form-input" type="time" value={form.closeTime} onChange={e => setForm({...form, closeTime: e.target.value})} dir="ltr" />
+            </div>
+          </div>
+          <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}>
+            <input type="checkbox" id="branch-open" checked={form.isOpen} onChange={e => setForm({...form, isOpen: e.target.checked})} />
+            <label htmlFor="branch-open" className="form-label" style={{ margin: 0 }}>{t.isOpen}</label>
+          </div>
+        </div>
+        <div className="modal-actions">
+          <button className="btn btn-secondary" onClick={onCancel}>{t.cancel}</button>
+          <button className="btn btn-primary" onClick={handleSubmit} disabled={loading || !form.nameAr.trim() || !form.phone.trim()}>
+            {loading ? <span className="spinner" /> : t.save}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── ReportsTab ─────────────────────────────────────────────────────────────
+const ReportsTab = ({ t, token }) => {
+  const [weekly, setWeekly] = useState([]);
+  const [topItems, setTopItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [wRes, tRes] = await Promise.all([
+          api.get('/stats/weekly', token),
+          api.get('/stats/top-items', token),
+        ]);
+        if (wRes.success) setWeekly(wRes.weekly);
+        if (tRes.success) setTopItems(tRes.topItems);
+      } catch {}
+      setLoading(false);
+    };
+    load();
+  }, [token]);
+
+  if (loading) return <p style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>{t.loading}</p>;
+
+  const maxRevenue = Math.max(...weekly.map(d => d.revenue), 1);
+  const maxQty = Math.max(...topItems.map(i => i.totalQty), 1);
+
+  return (
+    <div className="reports-container">
+      <div className="report-section">
+        <h3 className="report-title">📊 {t.weeklyRevenue}</h3>
+        <div className="chart-container">
+          {weekly.map((day, i) => (
+            <div key={i} className="chart-bar-wrap">
+              <div className="chart-bar-value">{day.revenue > 0 ? (day.revenue / 1000).toFixed(0) + 'K' : '0'}</div>
+              <div className="chart-bar-bg">
+                <div className="chart-bar" style={{ height: `${(day.revenue / maxRevenue) * 100}%` }} />
+              </div>
+              <div className="chart-bar-label">{day.date.slice(5)}</div>
+              <div className="chart-bar-sub">{day.orders} {t.orders}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="report-section">
+        <h3 className="report-title">🏆 {t.topItems}</h3>
+        <div className="top-items-list">
+          {topItems.map((item, i) => (
+            <div key={i} className="top-item">
+              <div className="top-item-rank">{i + 1}</div>
+              <div className="top-item-info">
+                <div className="top-item-name">{item._id}</div>
+                <div className="top-item-bar-bg">
+                  <div className="top-item-bar" style={{ width: `${(item.totalQty / maxQty) * 100}%` }} />
+                </div>
+              </div>
+              <div className="top-item-stats">
+                <span>{item.totalQty}x</span>
+                <span className="top-item-rev">{item.totalRevenue?.toLocaleString()} {t.iqd}</span>
+              </div>
+            </div>
+          ))}
+          {topItems.length === 0 && <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '1rem' }}>{t.noResults}</p>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ─── AdminDashboard ──────────────────────────────────────────────────────────
 const AdminDashboard = ({ t, lang, token, user }) => {
   const [activeTab, setActiveTab] = useState('orders');
@@ -669,6 +1005,11 @@ const AdminDashboard = ({ t, lang, token, user }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [statusConfirm, setStatusConfirm] = useState(null);
+  const [menuFormItem, setMenuFormItem] = useState(undefined); // undefined=closed, null=new, object=edit
+  const [branchFormItem, setBranchFormItem] = useState(undefined);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [formLoading, setFormLoading] = useState(false);
+  const [prevOrderCount, setPrevOrderCount] = useState(null);
   const ITEMS_PER_PAGE = 20;
 
   const loadData = useCallback(async () => {
@@ -698,6 +1039,77 @@ const AdminDashboard = ({ t, lang, token, user }) => {
     loadData();
   }, [loadData]);
 
+  // Notification polling for new orders
+  useEffect(() => {
+    if (activeTab !== 'orders' && activeTab !== 'dashboard') return;
+    const interval = setInterval(async () => {
+      try {
+        const r = await api.get('/stats/dashboard', token);
+        if (r.success && prevOrderCount !== null && r.stats.totalOrders > prevOrderCount) {
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(t.newOrderNotif, { body: `${t.orderNumber}: ${r.stats.totalOrders}`, icon: '🍗' });
+          }
+          try { new Audio('data:audio/wav;base64,UklGRl9vT19teleXBFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YU'+Array(300).join('A')).play(); } catch {}
+          loadData();
+        }
+        setPrevOrderCount(r.stats.totalOrders);
+      } catch {}
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [activeTab, token, prevOrderCount, t.newOrderNotif, t.orderNumber, loadData]);
+
+  const requestNotifications = () => {
+    if ('Notification' in window) Notification.requestPermission();
+  };
+
+  // Menu CRUD
+  const handleSaveMenuItem = async (data) => {
+    setFormLoading(true);
+    try {
+      if (menuFormItem && menuFormItem._id) {
+        const r = await api.put('/menu/' + menuFormItem._id, data, token);
+        if (r.success) { setMenuItems(prev => prev.map(i => i._id === menuFormItem._id ? r.item : i)); setMenuFormItem(undefined); }
+      } else {
+        const r = await api.post('/menu', data, token);
+        if (r.success) { setMenuItems(prev => [...prev, r.item]); setMenuFormItem(undefined); }
+      }
+    } catch {}
+    setFormLoading(false);
+  };
+
+  const handleDeleteMenuItem = async () => {
+    if (!deleteConfirm) return;
+    try {
+      const r = await api.delete('/menu/' + deleteConfirm._id, token);
+      if (r.success) setMenuItems(prev => prev.filter(i => i._id !== deleteConfirm._id));
+    } catch {}
+    setDeleteConfirm(null);
+  };
+
+  // Branch CRUD
+  const handleSaveBranch = async (data) => {
+    setFormLoading(true);
+    try {
+      if (branchFormItem && branchFormItem._id) {
+        const r = await api.put('/branches/' + branchFormItem._id, data, token);
+        if (r.success) { setBranches(prev => prev.map(b => b._id === branchFormItem._id ? r.branch : b)); setBranchFormItem(undefined); }
+      } else {
+        const r = await api.post('/branches', data, token);
+        if (r.success) { setBranches(prev => [...prev, r.branch]); setBranchFormItem(undefined); }
+      }
+    } catch {}
+    setFormLoading(false);
+  };
+
+  const handleDeleteBranch = async () => {
+    if (!deleteConfirm) return;
+    try {
+      const r = await api.delete('/branches/' + deleteConfirm._id, token);
+      if (r.success) setBranches(prev => prev.filter(b => b._id !== deleteConfirm._id));
+    } catch {}
+    setDeleteConfirm(null);
+  };
+
   const handleStatusChange = (orderId, newStatus) => {
     setStatusConfirm({ orderId, newStatus });
   };
@@ -712,7 +1124,7 @@ const AdminDashboard = ({ t, lang, token, user }) => {
     setStatusConfirm(null);
   };
 
-  const tabs = ['dashboard', 'orders', 'menu', 'branches'];
+  const tabs = ['dashboard', 'orders', 'menu', 'branches', 'reports'];
 
   return (
     <main className="container">
@@ -724,6 +1136,9 @@ const AdminDashboard = ({ t, lang, token, user }) => {
           </button>
         ))}
         <button className="btn btn-secondary" onClick={loadData} aria-label={t.retry}>🔄</button>
+        {'Notification' in window && Notification.permission !== 'granted' && (
+          <button className="btn btn-secondary" onClick={requestNotifications} title={t.enableNotifications}>🔔</button>
+        )}
       </div>
 
       {error && <div className="alert alert-error" role="alert">{error} <button className="btn btn-sm btn-secondary" onClick={loadData} style={{ marginInlineStart: '0.5rem' }}>{t.retry}</button></div>}
@@ -802,38 +1217,85 @@ const AdminDashboard = ({ t, lang, token, user }) => {
 
       {/* Menu Tab */}
       {activeTab === 'menu' && !loading && (
-        <div className="card-grid-sm" role="list">
-          {menuItems.map(item => (
-            <div key={item._id} className="admin-card" role="listitem">
-              <div className="icon" aria-hidden="true">{item.icon || '🍗'}</div>
-              <h4>{item.name?.[lang] || item.name?.ar}</h4>
-              <p className="price">{item.price?.toLocaleString()} {t.iqd}</p>
-              <p className="meta">{t[item.category] || item.category} | {item.isAvailable ? '✅ ' + t.open : '❌ ' + t.closed}</p>
+        <>
+          {user?.role === 'admin' || user?.role === 'manager' ? (
+            <div style={{ marginBottom: '1rem' }}>
+              <button className="btn btn-primary" onClick={() => setMenuFormItem(null)}>+ {t.addMenuItem}</button>
             </div>
-          ))}
-        </div>
+          ) : null}
+          <div className="card-grid-sm" role="list">
+            {menuItems.map(item => (
+              <div key={item._id} className="admin-card" role="listitem">
+                <div className="icon" aria-hidden="true">{item.icon || '🍗'}</div>
+                <h4>{item.name?.[lang] || item.name?.ar}</h4>
+                <p className="price">{item.price?.toLocaleString()} {t.iqd}</p>
+                <p className="meta">{t[item.category] || item.category} | {item.isAvailable ? '✅ ' + t.available : '❌ ' + t.notAvailable}</p>
+                {(user?.role === 'admin' || user?.role === 'manager') && (
+                  <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.5rem' }}>
+                    <button className="btn btn-outline btn-sm" onClick={() => setMenuFormItem(item)}>✏️ {t.edit}</button>
+                    {user?.role === 'admin' && <button className="btn btn-danger btn-sm" onClick={() => setDeleteConfirm({ ...item, type: 'menu' })}>🗑️</button>}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Branches Tab */}
       {activeTab === 'branches' && !loading && (
-        <div className="card-grid" role="list">
-          {branches.map(branch => (
-            <div key={branch._id} className="admin-card" role="listitem">
-              <h4>{branch.name?.[lang] || branch.name?.ar}</h4>
-              <p className="meta"><span aria-hidden="true">📞</span> {branch.phone}</p>
-              <p className="meta"><span aria-hidden="true">⏰</span> {branch.workingHours?.open} - {branch.workingHours?.close}</p>
-              <span className={`status-badge ${branch.isOpen ? 'status-open' : 'status-closed'}`} role="status" style={{ display: 'inline-block', marginTop: '0.5rem' }}>
-                {branch.isOpen ? t.open : t.closed}
-              </span>
+        <>
+          {user?.role === 'admin' && (
+            <div style={{ marginBottom: '1rem' }}>
+              <button className="btn btn-primary" onClick={() => setBranchFormItem(null)}>+ {t.addBranch}</button>
             </div>
-          ))}
-        </div>
+          )}
+          <div className="card-grid" role="list">
+            {branches.map(branch => (
+              <div key={branch._id} className="admin-card" role="listitem">
+                <h4>{branch.name?.[lang] || branch.name?.ar}</h4>
+                <p className="meta"><span aria-hidden="true">📞</span> {branch.phone}</p>
+                <p className="meta"><span aria-hidden="true">⏰</span> {branch.workingHours?.open} - {branch.workingHours?.close}</p>
+                <span className={`status-badge ${branch.isOpen ? 'status-open' : 'status-closed'}`} role="status" style={{ display: 'inline-block', marginTop: '0.5rem' }}>
+                  {branch.isOpen ? t.open : t.closed}
+                </span>
+                {(user?.role === 'admin' || user?.role === 'manager') && (
+                  <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.5rem' }}>
+                    <button className="btn btn-outline btn-sm" onClick={() => setBranchFormItem(branch)}>✏️ {t.edit}</button>
+                    {user?.role === 'admin' && <button className="btn btn-danger btn-sm" onClick={() => setDeleteConfirm({ ...branch, type: 'branch' })}>🗑️</button>}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
       )}
+
+      {/* Reports Tab */}
+      {activeTab === 'reports' && !loading && <ReportsTab t={t} token={token} />}
 
       {/* Status Change Confirmation */}
       {statusConfirm && (
         <ConfirmModal title={t.confirmStatusChange} onConfirm={confirmStatusUpdate} onCancel={() => setStatusConfirm(null)} confirmText={t.yes} cancelText={t.no}>
           <p>{t.confirmStatusChange}</p>
+        </ConfirmModal>
+      )}
+
+      {/* Menu Form Modal */}
+      {menuFormItem !== undefined && (
+        <MenuFormModal t={t} item={menuFormItem} onSave={handleSaveMenuItem} onCancel={() => setMenuFormItem(undefined)} loading={formLoading} />
+      )}
+
+      {/* Branch Form Modal */}
+      {branchFormItem !== undefined && (
+        <BranchFormModal t={t} branch={branchFormItem} onSave={handleSaveBranch} onCancel={() => setBranchFormItem(undefined)} loading={formLoading} />
+      )}
+
+      {/* Delete Confirmation */}
+      {deleteConfirm && (
+        <ConfirmModal title={t.confirmDelete} onConfirm={deleteConfirm.type === 'menu' ? handleDeleteMenuItem : handleDeleteBranch} onCancel={() => setDeleteConfirm(null)} confirmText={t.delete} cancelText={t.cancel}>
+          <p>{t.confirmDelete}</p>
+          <p style={{ fontWeight: 'bold', color: 'var(--primary)' }}>{deleteConfirm.name?.[lang] || deleteConfirm.name?.ar}</p>
         </ConfirmModal>
       )}
     </main>
@@ -1008,6 +1470,7 @@ function AppContent() {
         {page === 'cart' && <CartPage t={t} lang={lang} cart={cart} setCart={setCart} branches={branches} onOrderPlaced={handleOrderPlaced} />}
         {page === 'branches' && <BranchesPage t={t} lang={lang} branches={branches} />}
         {page === 'track' && <TrackPage t={t} defaultOrderNum={lastOrderNum} />}
+        {page === 'about' && <AboutPage t={t} lang={lang} />}
         {page === 'login' && <LoginPage t={t} onLogin={handleLogin} />}
         {page === 'admin' && user && <AdminDashboard t={t} lang={lang} token={token} user={user} />}
         {page === 'admin' && !user && <LoginPage t={t} onLogin={handleLogin} />}

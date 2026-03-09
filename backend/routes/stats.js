@@ -58,4 +58,50 @@ router.get('/orders-by-status', protect, async (req, res) => {
   }
 });
 
+// GET /api/stats/weekly - Last 7 days revenue (admin/manager)
+router.get('/weekly', protect, authorize('admin', 'manager'), async (req, res) => {
+  try {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      d.setHours(0, 0, 0, 0);
+      const next = new Date(d);
+      next.setDate(next.getDate() + 1);
+      days.push({ start: new Date(d), end: next, label: d.toISOString().slice(0, 10) });
+    }
+
+    const results = await Promise.all(days.map(async (day) => {
+      const [revenue, orders] = await Promise.all([
+        Order.aggregate([
+          { $match: { status: 'delivered', createdAt: { $gte: day.start, $lt: day.end } } },
+          { $group: { _id: null, total: { $sum: '$total' } } }
+        ]),
+        Order.countDocuments({ createdAt: { $gte: day.start, $lt: day.end } })
+      ]);
+      return { date: day.label, revenue: revenue[0]?.total || 0, orders };
+    }));
+
+    res.json({ success: true, weekly: results });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch weekly stats' });
+  }
+});
+
+// GET /api/stats/top-items - Top selling items (admin/manager)
+router.get('/top-items', protect, authorize('admin', 'manager'), async (req, res) => {
+  try {
+    const topItems = await Order.aggregate([
+      { $match: { status: 'delivered' } },
+      { $unwind: '$items' },
+      { $group: { _id: '$items.name', totalQty: { $sum: '$items.quantity' }, totalRevenue: { $sum: '$items.subtotal' } } },
+      { $sort: { totalQty: -1 } },
+      { $limit: 10 }
+    ]);
+    res.json({ success: true, topItems });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch top items' });
+  }
+});
+
 module.exports = router;
