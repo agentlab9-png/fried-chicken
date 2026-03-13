@@ -36,8 +36,12 @@ const OrderSchema = new mongoose.Schema({
 
 OrderSchema.pre('save', async function(next) {
   if (!this.orderNumber) {
-    const lastOrder = await this.constructor.findOne({}, {}, { sort: { orderNumber: -1 } });
-    this.orderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1000;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const lastOrder = await this.constructor.findOne({}, {}, { sort: { orderNumber: -1 } });
+      this.orderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1000;
+      const existing = await this.constructor.findOne({ orderNumber: this.orderNumber });
+      if (!existing) break;
+    }
   }
   next();
 });

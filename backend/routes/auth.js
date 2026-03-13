@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const { protect, authorize } = require('../middleware/auth');
+const validateId = require('../middleware/validateId');
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -81,7 +82,7 @@ router.get('/users', protect, authorize('admin', 'manager'), async (req, res) =>
 });
 
 // PUT /api/auth/users/:id (admin only)
-router.put('/users/:id', protect, authorize('admin'), [
+router.put('/users/:id', protect, authorize('admin'), validateId(), [
   body('name').optional().trim().isLength({ max: 100 }).withMessage('Name too long'),
   body('role').optional().isIn(['admin', 'manager', 'staff']).withMessage('Invalid role'),
   body('isActive').optional().isBoolean().withMessage('Invalid active status'),

@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const MenuItem = require('../models/MenuItem');
 const { protect, authorize } = require('../middleware/auth');
+const validateId = require('../middleware/validateId');
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -29,7 +30,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/menu/:id - Get single item
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateId(), async (req, res) => {
   try {
     const item = await MenuItem.findById(req.params.id);
     if (!item) return res.status(404).json({ error: 'Menu item not found' });
@@ -62,7 +63,7 @@ router.post('/', protect, authorize('admin', 'manager'), [
 });
 
 // PUT /api/menu/:id - Update item (admin/manager)
-router.put('/:id', protect, authorize('admin', 'manager'), [
+router.put('/:id', protect, authorize('admin', 'manager'), validateId(), [
   body('name.ar').optional().trim().notEmpty(),
   body('name.en').optional().trim().notEmpty(),
   body('name.ku').optional().trim().notEmpty(),
@@ -82,7 +83,7 @@ router.put('/:id', protect, authorize('admin', 'manager'), [
 });
 
 // DELETE /api/menu/:id - Delete item (admin only)
-router.delete('/:id', protect, authorize('admin'), async (req, res) => {
+router.delete('/:id', protect, authorize('admin'), validateId(), async (req, res) => {
   try {
     const item = await MenuItem.findByIdAndDelete(req.params.id);
     if (!item) return res.status(404).json({ error: 'Menu item not found' });

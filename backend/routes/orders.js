@@ -2,7 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { body, param, validationResult } = require('express-validator');
 const Order = require('../models/Order');
+const rateLimit = require('express-rate-limit');
 const { protect, authorize } = require('../middleware/auth');
+const validateId = require('../middleware/validateId');
+
+const trackLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  message: { error: 'Too many tracking requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Validation helper
 const validate = (req, res, next) => {
@@ -77,10 +87,13 @@ router.get('/', protect, async (req, res) => {
 });
 
 // GET /api/orders/:id - Get single order
-router.get('/:id', protect, async (req, res) => {
+router.get('/:id', protect, validateId(), async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate('branch items.menuItem');
     if (!order) return res.status(404).json({ error: 'Order not found' });
+    if (req.user.role === 'staff' && order.branch?.toString() !== req.user.branch?.toString()) {
+      return res.status(403).json({ error: 'Not authorized to view this order' });
+    }
     res.json({ success: true, order });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch order' });
@@ -88,7 +101,7 @@ router.get('/:id', protect, async (req, res) => {
 });
 
 // PUT /api/orders/:id/status - Update order status
-router.put('/:id/status', protect, [
+router.put('/:id/status', protect, validateId(), [
   body('status').isIn(['pending', 'confirmed', 'preparing', 'ready', 'delivering', 'delivered', 'cancelled'])
     .withMessage('Invalid status'),
   validate,
@@ -107,7 +120,7 @@ router.put('/:id/status', protect, [
 });
 
 // GET /api/orders/track/:orderNumber - Track order by number (public)
-router.get('/track/:orderNumber', async (req, res) => {
+router.get('/track/:orderNumber', trackLimiter, async (req, res) => {
   try {
     const orderNumber = parseInt(req.params.orderNumber);
     if (isNaN(orderNumber) || orderNumber < 0) {

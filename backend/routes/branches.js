@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Branch = require('../models/Branch');
 const { protect, authorize } = require('../middleware/auth');
+const validateId = require('../middleware/validateId');
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -23,7 +24,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/branches/:id
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateId(), async (req, res) => {
   try {
     const branch = await Branch.findById(req.params.id);
     if (!branch) return res.status(404).json({ error: 'Branch not found' });
@@ -57,7 +58,7 @@ router.post('/', protect, authorize('admin'), [
 });
 
 // PUT /api/branches/:id - Update branch (admin/manager)
-router.put('/:id', protect, authorize('admin', 'manager'), [
+router.put('/:id', protect, authorize('admin', 'manager'), validateId(), [
   body('name.ar').optional().trim().notEmpty(),
   body('name.en').optional().trim().notEmpty(),
   body('name.ku').optional().trim().notEmpty(),
@@ -75,7 +76,7 @@ router.put('/:id', protect, authorize('admin', 'manager'), [
 });
 
 // DELETE /api/branches/:id (admin only)
-router.delete('/:id', protect, authorize('admin'), async (req, res) => {
+router.delete('/:id', protect, authorize('admin'), validateId(), async (req, res) => {
   try {
     const branch = await Branch.findByIdAndDelete(req.params.id);
     if (!branch) return res.status(404).json({ error: 'Branch not found' });
